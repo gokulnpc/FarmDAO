@@ -40,7 +40,7 @@ const policyDetailsSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["Active", "Expired", "Claimed"],
+    enum: ["Active", "Inactive", "Expired", "Claimed", "Redeemed"],
     default: "Active",
   },
   weatherHistory: [
@@ -80,6 +80,22 @@ const policyDetailsSchema = new mongoose.Schema({
   lastWeatherUpdate: {
     type: Date,
     default: Date.now,
+  },
+  lastUpdated: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedBy: {
+    type: String,
+  },
+  resolutionDetails: {
+    disputeId: String,
+    outcome: {
+      type: String,
+      enum: ["Approved", "Rejected"],
+    },
+    resolvedAt: Date,
+    resolvedBy: String,
   },
   createdAt: {
     type: Date,

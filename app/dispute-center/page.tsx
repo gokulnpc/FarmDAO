@@ -40,7 +40,7 @@ interface Dispute {
 export default function DisputeCenter() {
   const { currentAccount, provider } = useWallet();
   const [disputes, setDisputes] = useState<Dispute[]>([]);
-  const [userStake, setUserStake] = useState(50);
+  const [userStake, setUserStake] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [newPolicyId, setNewPolicyId] = useState("");
 
@@ -375,8 +375,8 @@ export default function DisputeCenter() {
       if (resolvedEvent) {
         const approved = resolvedEvent.args[1]; // Second argument is the approved status
 
-        // Update MongoDB with resolved status
-        const response = await fetch(`/api/disputes/${disputeId}/`, {
+        // Update MongoDB with resolved status for dispute
+        const disputeResponse = await fetch(`/api/disputes/${disputeId}/`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -387,12 +387,41 @@ export default function DisputeCenter() {
           }),
         });
 
-        if (!response.ok) {
+        if (!disputeResponse.ok) {
           console.error(
             "Failed to update dispute status in database:",
-            await response.text()
+            await disputeResponse.text()
           );
         }
+        console.log("Dispute resolved successfully");
+        console.log("Policy ID:-", dispute.policyId);
+        // Update policy status
+        const policyResponse = await fetch(
+          `/api/policy-details?policyId=${dispute.policyId}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              status: approved ? "Claimed" : "Inactive",
+              lastUpdated: Math.floor(Date.now() / 1000),
+              updatedBy: signerAddress,
+              resolutionDetails: {
+                disputeId,
+                outcome: approved ? "Approved" : "Rejected",
+                resolvedAt: Math.floor(Date.now() / 1000),
+                resolvedBy: signerAddress,
+              },
+            }),
+          }
+        );
+
+        if (!policyResponse.ok) {
+          console.error(
+            "Failed to update policy status in database:",
+            await policyResponse.text()
+          );
+        }
+        console.log("Policy status updated successfully");
 
         toast.success(
           `Dispute resolved successfully! Outcome: ${

@@ -111,34 +111,69 @@ export async function GET(request: Request) {
 export async function PATCH(request: Request) {
   try {
     await connectDB();
-    const body = await request.json();
-    const { policyId, weatherData } = body;
+    const { searchParams } = new URL(request.url);
+    const policyId = searchParams.get("policyId");
 
-    if (!policyId || !weatherData) {
+    if (!policyId) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Policy ID is required" },
+        { status: 400 }
+      );
+    }
+    console.log("Policy ID:", policyId);
+
+    const body = await request.json();
+    const { status, lastUpdated, updatedBy, resolutionDetails } = body;
+
+    // Validate status
+    if (
+      !["Active", "Inactive", "Redeemed", "Expired", "Claimed"].includes(status)
+    ) {
+      return NextResponse.json(
+        { error: "Invalid status value" },
         { status: 400 }
       );
     }
 
-    const policy = await PolicyDetails.findOne({ policyId });
-    if (!policy) {
+    // Convert timestamps to Date objects
+    const updateData = {
+      status,
+      lastUpdated: new Date(lastUpdated * 1000), // Convert Unix timestamp to Date
+      updatedBy,
+      resolutionDetails: resolutionDetails
+        ? {
+            ...resolutionDetails,
+            resolvedAt: new Date(resolutionDetails.resolvedAt * 1000), // Convert Unix timestamp to Date
+          }
+        : undefined,
+      updatedAt: new Date(), // Update the updatedAt timestamp
+    };
+
+    // Update policy details
+    const updatedPolicy = await PolicyDetails.findOneAndUpdate(
+      { policyId },
+      {
+        $set: updateData,
+      },
+      {
+        new: true, // Return the updated document
+        runValidators: true, // Run schema validations on update
+      }
+    );
+
+    if (!updatedPolicy) {
       return NextResponse.json({ error: "Policy not found" }, { status: 404 });
     }
 
-    // Add weather data to history
-    policy.weatherHistory.push({
-      date: new Date(),
-      ...weatherData,
-    });
-    policy.lastWeatherUpdate = new Date();
-    await policy.save();
-
-    return NextResponse.json({ success: true, policy });
-  } catch (error) {
-    console.error("Error updating policy weather data:", error);
+    return NextResponse.json({ success: true, policy: updatedPolicy });
+  } catch (error: any) {
+    console.error("Error updating policy details:", error);
+    // Return more detailed error message
     return NextResponse.json(
-      { error: "Failed to update policy weather data" },
+      {
+        error: "Failed to update policy details",
+        details: error.message || "Unknown error",
+      },
       { status: 500 }
     );
   }

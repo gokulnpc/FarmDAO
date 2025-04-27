@@ -193,17 +193,32 @@ export default function MyPolicies() {
     return new Date(endDate) > new Date();
   };
 
-  const getStatusBadge = (endDate: string) => {
-    const active = isPolicyActive(endDate);
-    return active ? (
-      <div className="bg-green-900/50 text-green-400 px-3 py-1 rounded-full text-sm">
-        Active
-      </div>
-    ) : (
-      <div className="bg-neutral-700/50 text-neutral-400 px-3 py-1 rounded-full text-sm">
-        Expired
-      </div>
-    );
+  const getStatusBadge = (status: string) => {
+    if (status === "Active") {
+      return (
+        <div className="bg-green-900/50 text-green-400 px-3 py-1 rounded-full text-sm">
+          Active
+        </div>
+      );
+    } else if (status === "Claimed") {
+      return (
+        <div className="bg-green-900/50 text-green-400 px-3 py-1 rounded-full text-sm">
+          Claimed
+        </div>
+      );
+    } else if (status === "Expired") {
+      return (
+        <div className="bg-red-900/50 text-red-400 px-3 py-1 rounded-full text-sm">
+          Expired
+        </div>
+      );
+    } else {
+      return (
+        <div className="bg-neutral-700/50 text-neutral-400 px-3 py-1 rounded-full text-sm">
+          Inactive
+        </div>
+      );
+    }
   };
 
   const PolicyDetails = ({ policy }: { policy: PolicyWithWeather }) => {
@@ -490,7 +505,7 @@ export default function MyPolicies() {
                         <h3 className="text-2xl font-bold">
                           Policy #{policy.policyId.slice(-4)}
                         </h3>
-                        {getStatusBadge(policy.endDate || "")}
+                        {getStatusBadge(policy.status || "")}
                       </div>
 
                       <div className="space-y-4 mb-6">
