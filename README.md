@@ -29,6 +29,13 @@ In the case of disputes, token holders vote via a decentralized governance syste
 - 🗳 **Community-Driven Governance**: Token holders resolve disputes through an anonymous, incentivized voting system.
 - 🔒 **Incentive-Aligned Voting**: Honest voters earn FDAO rewards, ensuring unbiased governance participation.
 
+### 🛠️ [In Progress]
+- 🌐 Cross-Parachain Participation: Building a scalable, accessible ecosystem where users across different Polkadot parachains can participate using XCM messaging and native asset transfers.
+
+- 🔒 Enhanced Payout Security: Strengthening payout mechanisms with Polkadot multisig accounts for even higher security and transparency.
+
+- 📡 Advanced Decentralized Oracle Integration: Deepening integration with Chainlink's Decentralized Oracle Network to fetch real-time, on-chain weather data more efficiently.
+
 ## ❄️ Project Structure
 ```
 FarmDao-Frontend/
@@ -54,7 +61,7 @@ FarmDao-Contracts/
 
 ### ⛓️ Blockchain & Smart Contracts
 
-![Polkadot](https://img.shields.io/badge/Polkadot-363636?style=for-the-badge&logo=Polkadot&logoColor=white)
+![Polkadot](https://img.shields.io/badge/Polkadot-E6007A?style=for-the-badge&logo=Polkadot&logoColor=white)
 ![Solidity](https://img.shields.io/badge/Solidity-363636?style=for-the-badge&logo=solidity&logoColor=white)
 ![Hardhat](https://img.shields.io/badge/Hardhat-FFD700?style=for-the-badge&logo=hardhat&logoColor=black)
 
