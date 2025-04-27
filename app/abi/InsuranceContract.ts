@@ -1,11 +1,66 @@
 export const InsuranceContract = {
-  address: "0x2e4c31F33080462dc3f658D283397B532d9C6182",
+  address: "0x7784f99F10b318D41Ea040d4EaAd8f385Ad1f511",
   abi: [
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_policyId",
+          type: "uint256",
+        },
+      ],
+      name: "cancelPolicy",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_premium",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "_maxPayout",
+          type: "uint256",
+        },
+      ],
+      name: "createPolicy",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_amount",
+          type: "uint256",
+        },
+      ],
+      name: "fundContract",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
     {
       inputs: [
         {
           internalType: "address",
           name: "_stablecoin",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "_receiptNFT",
           type: "address",
         },
       ],
@@ -155,16 +210,55 @@ export const InsuranceContract = {
       type: "event",
     },
     {
-      inputs: [],
-      name: "INITIAL_FUND_AMOUNT",
-      outputs: [
+      anonymous: false,
+      inputs: [
         {
+          indexed: true,
           internalType: "uint256",
-          name: "",
+          name: "policyId",
           type: "uint256",
         },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "farmer",
+          type: "address",
+        },
       ],
-      stateMutability: "view",
+      name: "ReceiptNFTMinted",
+      type: "event",
+    },
+    {
+      inputs: [],
+      name: "renounceOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_disputeManager",
+          type: "address",
+        },
+      ],
+      name: "setDisputeManager",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "newOwner",
+          type: "address",
+        },
+      ],
+      name: "transferOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
       type: "function",
     },
     {
@@ -175,32 +269,8 @@ export const InsuranceContract = {
           type: "uint256",
         },
       ],
-      name: "cancelPolicy",
+      name: "triggerPayout",
       outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_premium",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "_maxPayout",
-          type: "uint256",
-        },
-      ],
-      name: "createPolicy",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
       stateMutability: "nonpayable",
       type: "function",
     },
@@ -215,19 +285,6 @@ export const InsuranceContract = {
         },
       ],
       stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_amount",
-          type: "uint256",
-        },
-      ],
-      name: "fundContract",
-      outputs: [],
-      stateMutability: "nonpayable",
       type: "function",
     },
     {
@@ -287,6 +344,19 @@ export const InsuranceContract = {
           internalType: "bool",
           name: "isClaimed",
           type: "bool",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "INITIAL_FUND_AMOUNT",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
         },
       ],
       stateMutability: "view",
@@ -369,22 +439,15 @@ export const InsuranceContract = {
     },
     {
       inputs: [],
-      name: "renounceOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
+      name: "receiptNFT",
+      outputs: [
         {
-          internalType: "address",
-          name: "_disputeManager",
+          internalType: "contract ReceiptNFT",
+          name: "",
           type: "address",
         },
       ],
-      name: "setDisputeManager",
-      outputs: [],
-      stateMutability: "nonpayable",
+      stateMutability: "view",
       type: "function",
     },
     {
@@ -398,32 +461,6 @@ export const InsuranceContract = {
         },
       ],
       stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "newOwner",
-          type: "address",
-        },
-      ],
-      name: "transferOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_policyId",
-          type: "uint256",
-        },
-      ],
-      name: "triggerPayout",
-      outputs: [],
-      stateMutability: "nonpayable",
       type: "function",
     },
   ],
