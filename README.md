@@ -15,11 +15,13 @@ Try it our here: https://farmdao.vercel.app/
 ## 🚀 Contract Address on testnet:
 
 - **DisputeManager**: 
-0x15a22976037B6aD359d644a281536BFBBc8797C3
-- **GovernanceDao**: 0xb8F156806f8aEcc25A69c2EFC5a414E326F1E616
+0x23988C9d187A064Feb7EE21dB389B469FbDc6421
+- **GovernanceDao**: 0x37035da168BaEE11970019B3fe7377aB3984A18b
 - **InsuranceContract**: 0x7784f99F10b318D41Ea040d4EaAd8f385Ad1f511
 - **ReceiptNFT**: 
 0x20db875112FF5083267A3C19C3812de5eb3C4C8C
+- **FUSD**: 0xF52593b79C6a6c48DE918C1a3469959029DC3a8e
+- **FDAO**: 0xaC348bAB58b649a41DC23D108e90d949A8852fa0
 
 [FarmDAO Contracts](https://github.com/Thongnguyentam/FarmDAO-Contracts)
 
