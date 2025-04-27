@@ -62,22 +62,61 @@ Try it our here: https://farmdao.vercel.app/
 
 [FarmDAO Contracts](https://github.com/Thongnguyentam/FarmDAO-Contracts)
 
-## 🎯 Key Features
+## ✨ Key Features
 
-- 🌾 **Parametric Crop Insurance**: Instant, automated payouts triggered by real-world weather data.
-- ⛓ **On-Chain NFT Insurance Policies**: Farmers own policy NFTs transparently on-chain.
-- 🌩 **Decentralized Oracles**: Secure, tamper-proof weather data via Chainlink on Polkadot parachains.
-- 🗳 **Community-Driven Governance**: Token holders resolve disputes through an anonymous, incentivized voting system.
-- 🔒 **Incentive-Aligned Voting**: Honest voters earn FDAO rewards, ensuring unbiased governance participation.
+---
 
-- **Connect Wallet** (Metamask, WalletConnect support)
-- **Buy Insurance** plans using stablecoin (FUSD/WUSD)
-- **Real-Time Weather Monitoring** via Chainlink Oracle
-- **Automatic Payouts** for insured disasters
-- **Dispute Resolution DAO** (vote to approve or reject payout)
-- **Staking Model** for voters (anti-sybil protection)
-- **FDAO Token Economy** (Governance + Redeem for FUSD)
-- **Treasury Yield Farming** (T-Bills, delta-neutral strategies for 3–5% APY)
+### 🌾 Parametric Crop Insurance  
+- Instant, automated payouts triggered by real-world weather data using smart contracts.  
+- No need for manual claims or traditional insurance agents.
+
+### 🖼 On-Chain NFT Insurance Policies  
+- Farmers receive a **Receipt NFT** representing their active insurance coverage.  
+- Full transparency and ownership on-chain.
+
+### 🌩 Decentralized Oracles  
+- Secure, tamper-proof real-world weather data sourced from **Chainlink**.  
+- Integrated via oracles operating on **Polkadot parachains** for enhanced reliability.
+
+### 🗳 Community-Driven Governance  
+- Disputes are resolved by the community of **FDAO token holders**.  
+- Voting is conducted anonymously to ensure fair, unbiased decisions.
+
+### 🔒 Incentive-Aligned Voting  
+- Honest voters on the majority side earn **FDAO rewards**.  
+- Anti-sybil protection with minimum staking requirements to vote.  
+- Aligns governance participation with platform sustainability.
+
+---
+
+## 🛠 Core Platform Functionalities
+
+- **Connect Wallet:**  
+  Seamless Metamask and WalletConnect support for onboarding farmers.
+
+- **Buy Insurance Plans:**  
+  Purchase fixed insurance coverage tiers using **FUSD** or **WUSD** stablecoins.
+
+- **Real-Time Weather Monitoring:**  
+  Chainlink Oracles monitor climate data and trigger payouts based on predefined thresholds.
+
+- **Automatic Disaster Payouts:**  
+  Farmers automatically receive payouts if insured weather events occur — no need for manual intervention.
+
+- **Dispute Resolution DAO:**  
+  In case of contested payouts, FDAO token holders vote to approve or reject the payout transparently.
+
+- **Staking Model for Governance:**  
+  Voters must stake FDAO tokens to participate in voting, preventing spam and malicious votes.
+
+- **FDAO Token Economy:**  
+  Earn FDAO tokens by participating in governance.  
+  Redeem FDAO tokens for FUSD at a fixed rate via the redemption pool.
+
+- **Treasury Yield Farming:**  
+  Insurance premiums are invested into low-risk strategies:  
+  - Tokenized T-Bills (3–5% APY)  
+  - Delta-neutral liquidity pools for sustainable treasury growth.
   
 ## 📈 Treasury Strategy (Profitability)
 
