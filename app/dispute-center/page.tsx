@@ -1,7 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { ethers } from "ethers";
+import { useWallet } from "@/app/providers/WalletProvider";
+import { DisputeManager } from "@/app/abi/DisputeManager";
+import { FDAO } from "@/app/abi/FDAO";
+import { toast } from "sonner";
 import {
   ArrowRight,
   Clock,
@@ -14,69 +19,358 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { GovernanceDAO } from "@/app/abi/GovernanceDAO";
+
+interface Dispute {
+  id: string;
+  disputeId: string;
+  policyId: string;
+  farmer?: string;
+  creator: string;
+  description?: string;
+  requestedAmount?: number;
+  votesFor: number;
+  votesAgainst: number;
+  timeRemaining?: string;
+  status: "Active" | "Approved" | "Rejected";
+  startTime: number;
+}
 
 export default function DisputeCenter() {
-  const [disputes, setDisputes] = useState([
-    {
-      id: "DISP-1234",
-      policyId: "FARM-5678-2025",
-      farmer: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-      description: "Drought damage claim disputed by oracle data inconsistency",
-      requestedAmount: 7500,
-      votesFor: 65,
-      votesAgainst: 35,
-      timeRemaining: "23 hours",
-      status: "Active",
-    },
-    {
-      id: "DISP-5678",
-      policyId: "FARM-9012-2024",
-      farmer: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-      description:
-        "Flood damage claim disputed due to policy coverage limitations",
-      requestedAmount: 5000,
-      votesFor: 48,
-      votesAgainst: 52,
-      timeRemaining: "12 hours",
-      status: "Active",
-    },
-    {
-      id: "DISP-9012",
-      policyId: "FARM-3456-2024",
-      farmer: "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
-      description: "Hail damage claim disputed by insufficient evidence",
-      requestedAmount: 3500,
-      votesFor: 75,
-      votesAgainst: 25,
-      timeRemaining: "Ended",
-      status: "Approved",
-    },
-  ]);
-
+  const { currentAccount, provider } = useWallet();
+  const [disputes, setDisputes] = useState<Dispute[]>([]);
   const [userStake, setUserStake] = useState(50);
+  const [isLoading, setIsLoading] = useState(false);
+  const [newPolicyId, setNewPolicyId] = useState("");
 
-  const handleVote = (disputeId: string, voteType: "for" | "against") => {
-    setDisputes(
-      disputes.map((dispute) => {
-        if (dispute.id === disputeId) {
-          if (voteType === "for") {
-            return {
-              ...dispute,
-              votesFor: dispute.votesFor + 5,
-              votesAgainst: dispute.votesAgainst - 5,
-            };
-          } else {
-            return {
-              ...dispute,
-              votesFor: dispute.votesFor - 5,
-              votesAgainst: dispute.votesAgainst + 5,
-            };
-          }
-        }
-        return dispute;
-      })
-    );
+  const createDispute = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!provider) {
+      toast.error("Please connect your wallet");
+      return;
+    }
+
+    if (!newPolicyId) {
+      toast.error("Please enter a policy ID");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const signer = await provider.getSigner();
+      const disputeManager = new ethers.Contract(
+        DisputeManager.address,
+        DisputeManager.abi,
+        signer
+      );
+
+      // Create dispute on blockchain using initiateDispute
+      const tx = await disputeManager.initiateDispute(newPolicyId);
+      const receipt = await tx.wait();
+
+      // Get dispute ID from event
+      const event = receipt.logs.find(
+        (log: any) => log.eventName === "DisputeInitiated"
+      );
+
+      if (!event) {
+        throw new Error("Dispute creation event not found");
+      }
+
+      const disputeId = event.args[0];
+
+      // Store in MongoDB
+      await fetch("/api/disputes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          disputeId: disputeId.toString(),
+          policyId: newPolicyId,
+          creator: currentAccount,
+          startTime: Math.floor(Date.now() / 1000),
+        }),
+      });
+
+      toast.success("Dispute created successfully!");
+      setNewPolicyId(""); // Clear input
+      fetchDisputes();
+    } catch (error) {
+      console.error("Error creating dispute:", error);
+      toast.error("Failed to create dispute");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleVote = async (dispute: Dispute, approve: boolean) => {
+    if (!provider) {
+      toast.error("Please connect your wallet");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const signer = await provider.getSigner();
+      const signerAddress = await signer.getAddress();
+      console.log("Signer Address:", signerAddress);
+      const governanceDAO = new ethers.Contract(
+        GovernanceDAO.address,
+        GovernanceDAO.abi,
+        signer
+      );
+      const fdaoToken = new ethers.Contract(FDAO.address, FDAO.abi, signer);
+
+      // Get dispute ID from the dispute object
+      const disputeId = dispute.disputeId;
+
+      // Check if dispute exists and get its data
+      const disputeData = await governanceDAO.disputes(disputeId);
+      console.log("Dispute data:", disputeData);
+
+      // Check if dispute is resolved
+      if (disputeData.resolved) {
+        toast.error("This dispute has already been resolved");
+        console.log("Dispute already resolved");
+        return;
+      }
+
+      // Check if voting period has ended
+      const votingPeriod = await governanceDAO.VOTING_PERIOD();
+      console.log("Voting Period:", votingPeriod);
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime > disputeData.startTime + votingPeriod) {
+        console.log("Voting period has ended");
+        console.log("Current Time:", currentTime);
+        console.log("Dispute Start Time:", disputeData.startTime);
+        console.log("Voting Period:", disputeData.startTime + votingPeriod);
+
+        toast.error("Voting period has ended for this dispute");
+        return;
+      }
+      console.log("Current Time:", currentTime);
+      // Check if user has already voted
+      const hasVoted = await governanceDAO
+        .disputes(disputeId)
+        .then((d: any) => d.hasVoted && d.hasVoted[signerAddress]);
+      if (hasVoted) {
+        toast.error("You have already voted on this dispute");
+        return;
+      }
+
+      // FDAO has 18 decimals, minimum stake is 100 FDAO
+      const stakeAmount = ethers.parseUnits("100", 18);
+
+      // Check FDAO balance
+      const fdaoBalance = await fdaoToken.balanceOf(signerAddress);
+      console.log("FDAO Balance:", ethers.formatUnits(fdaoBalance, 18), "FDAO");
+
+      if (fdaoBalance < stakeAmount) {
+        toast.error(
+          "Insufficient FDAO balance. You need at least 100 FDAO to vote."
+        );
+        return;
+      }
+
+      // Check current allowance
+      const currentAllowance = await fdaoToken.allowance(
+        signerAddress,
+        GovernanceDAO.address
+      );
+
+      // If allowance is insufficient, request approval
+      if (currentAllowance < stakeAmount) {
+        console.log("Requesting FDAO approval...");
+        const approveTx = await fdaoToken.approve(
+          GovernanceDAO.address,
+          stakeAmount,
+          {
+            gasLimit: 100000,
+          }
+        );
+        const approvalReceipt = await approveTx.wait();
+        if (approvalReceipt.status === 0) {
+          throw new Error("FDAO approval failed");
+        }
+        console.log("FDAO approved successfully");
+      }
+
+      console.log("Voting parameters:", {
+        disputeId,
+        approve,
+        stakeAmount: ethers.formatUnits(stakeAmount, 18),
+        voter: signerAddress,
+      });
+
+      // Cast vote using GovernanceDAO contract
+      const voteTx = await governanceDAO.vote(disputeId, approve, stakeAmount, {
+        gasLimit: 1000000,
+      });
+
+      console.log("Vote transaction sent:", voteTx.hash);
+      const receipt = await voteTx.wait();
+      console.log("Vote transaction receipt:", receipt);
+
+      // Check transaction status
+      if (receipt.status === 0) {
+        throw new Error("Transaction failed");
+      }
+
+      // Check for VoteCast event
+      const voteCastEvent = receipt.logs.find(
+        (log: any) => log.eventName === "VoteCast"
+      );
+
+      if (voteCastEvent) {
+        toast.success(`Vote cast successfully! Staked 100 FDAO`);
+      } else {
+        console.log("No VoteCast event found in logs:", receipt.logs);
+        toast.error("Vote transaction completed but no event found");
+      }
+
+      fetchDisputes();
+    } catch (error: any) {
+      console.error("Error voting:", error);
+      // Extract revert reason if available
+      let errorMessage = "Failed to cast vote";
+
+      if (error.reason) {
+        errorMessage = error.reason;
+      } else if (error.message) {
+        if (error.message.includes("Dispute already resolved")) {
+          errorMessage = "This dispute has already been resolved";
+        } else if (error.message.includes("Voting period ended")) {
+          errorMessage = "The voting period has ended for this dispute";
+        } else if (error.message.includes("Already voted")) {
+          errorMessage = "You have already voted on this dispute";
+        } else if (error.message.includes("Insufficient stake")) {
+          errorMessage =
+            "Stake amount is below the minimum required (100 FDAO)";
+        } else if (error.message.includes("Stake transfer failed")) {
+          errorMessage = "Failed to transfer FDAO tokens for staking";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      toast.error(`Voting failed: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resolveDispute = async (dispute: Dispute) => {
+    if (!provider) {
+      toast.error("Please connect your wallet");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const signer = await provider.getSigner();
+      const signerAddress = await signer.getAddress();
+      console.log("Signer Address:", signerAddress);
+
+      const governanceDAO = new ethers.Contract(
+        GovernanceDAO.address,
+        GovernanceDAO.abi,
+        signer
+      );
+
+      const disputeId = dispute.disputeId;
+      console.log("Resolving dispute:", disputeId);
+
+      // Get dispute data to check status
+      const disputeData = await governanceDAO.disputes(disputeId);
+      console.log("Dispute data:", disputeData);
+
+      if (disputeData.resolved) {
+        toast.error("Dispute is already resolved");
+        return;
+      }
+
+      // Check if voting period has ended
+      const votingPeriod = await governanceDAO.VOTING_PERIOD();
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime <= disputeData.startTime + votingPeriod) {
+        toast.error("Cannot resolve dispute before voting period ends");
+        console.log("Current Time:", currentTime);
+        console.log("Dispute Start Time:", disputeData.startTime);
+        console.log("Voting Period End:", disputeData.startTime + votingPeriod);
+        return;
+      }
+
+      // Call resolveDispute function
+      const tx = await governanceDAO.resolveDispute(disputeId, {
+        gasLimit: 1000000,
+      });
+
+      console.log("Resolution transaction sent:", tx.hash);
+      const receipt = await tx.wait();
+      console.log("Resolution receipt:", receipt);
+
+      if (receipt.status === 0) {
+        throw new Error("Resolution transaction failed");
+      }
+
+      // Check for DisputeResolved event
+      const resolvedEvent = receipt.logs.find(
+        (log: any) => log.eventName === "DisputeResolved"
+      );
+
+      if (resolvedEvent) {
+        const approved = resolvedEvent.args[1]; // Second argument is the approved status
+        toast.success(
+          `Dispute resolved successfully! Outcome: ${
+            approved ? "Approved" : "Rejected"
+          }`
+        );
+      } else {
+        console.log("No DisputeResolved event found in logs:", receipt.logs);
+        toast.error("Resolution transaction completed but no event found");
+      }
+
+      fetchDisputes();
+    } catch (error: any) {
+      console.error("Error resolving dispute:", error);
+      let errorMessage = "Failed to resolve dispute";
+
+      if (error.reason) {
+        errorMessage = error.reason;
+      } else if (error.message) {
+        if (error.message.includes("already resolved")) {
+          errorMessage = "This dispute has already been resolved";
+        } else if (error.message.includes("voting period")) {
+          errorMessage = "Cannot resolve dispute before voting period ends";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      toast.error(`Resolution failed: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchDisputes = async () => {
+    try {
+      const response = await fetch("/api/disputes");
+      console.log("response: ", response);
+      const data = await response.json();
+      if (data.success) {
+        setDisputes(data.disputes);
+      }
+    } catch (error) {
+      console.error("Error fetching disputes:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (currentAccount) {
+      fetchDisputes();
+    }
+  }, [currentAccount]);
 
   return (
     <div className="min-h-screen bg-neutral-800 text-white p-4">
@@ -111,6 +405,30 @@ export default function DisputeCenter() {
           </CardContent>
         </Card>
 
+        {/* Create Dispute Form */}
+        <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 mb-10">
+          <h2 className="text-2xl font-bold mb-4">Create New Dispute</h2>
+          <form onSubmit={createDispute} className="flex gap-4">
+            <Input
+              type="text"
+              placeholder="Enter Policy ID"
+              value={newPolicyId}
+              onChange={(e) => setNewPolicyId(e.target.value)}
+              className="flex-1 bg-neutral-800 border-neutral-700 text-white placeholder:text-neutral-500"
+            />
+            <Button
+              type="submit"
+              disabled={isLoading || !currentAccount}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-xl"
+            >
+              {isLoading ? "Creating..." : "Create Dispute"}
+            </Button>
+          </form>
+          <p className="text-sm text-neutral-400 mt-2">
+            Enter the Policy ID to create a new dispute for review by the DAO
+          </p>
+        </div>
+
         {/* Open Disputes */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-4">Open Disputes</h2>
@@ -132,32 +450,40 @@ export default function DisputeCenter() {
                 </Badge>
               </div>
 
-              <p className="text-lg mb-6">{dispute.description}</p>
+              {dispute.description && (
+                <p className="text-lg mb-6">{dispute.description}</p>
+              )}
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
                   <div className="flex justify-between">
-                    <span className="text-neutral-400">Farmer</span>
+                    <span className="text-neutral-400">Creator</span>
                     <span>
-                      {dispute.farmer.substring(0, 6)}...
-                      {dispute.farmer.substring(dispute.farmer.length - 4)}
+                      {(dispute.creator || "").substring(0, 6)}...
+                      {(dispute.creator || "").substring(
+                        dispute.creator?.length - 4
+                      )}
                     </span>
                   </div>
 
-                  <div className="flex justify-between">
-                    <span className="text-neutral-400">Requested Amount</span>
-                    <span className="font-bold">
-                      {dispute.requestedAmount.toLocaleString()} FUSD
-                    </span>
-                  </div>
+                  {dispute.requestedAmount && (
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Requested Amount</span>
+                      <span className="font-bold">
+                        {dispute.requestedAmount.toLocaleString()} FUSD
+                      </span>
+                    </div>
+                  )}
 
-                  <div className="flex justify-between">
-                    <span className="text-neutral-400">Time Remaining</span>
-                    <span className="flex items-center text-orange-400">
-                      <Clock className="h-4 w-4 mr-2" />
-                      {dispute.timeRemaining}
-                    </span>
-                  </div>
+                  {dispute.timeRemaining && (
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Time Remaining</span>
+                      <span className="flex items-center text-orange-400">
+                        <Clock className="h-4 w-4 mr-2" />
+                        {dispute.timeRemaining}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -179,20 +505,31 @@ export default function DisputeCenter() {
 
                   <div className="flex gap-4">
                     <Button
-                      onClick={() => handleVote(dispute.id, "for")}
+                      onClick={() => handleVote(dispute, true)}
+                      disabled={isLoading || dispute.status !== "Active"}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-xl py-4"
                     >
                       <ThumbsUp className="h-5 w-5 mr-2" />
                       Approve
                     </Button>
                     <Button
-                      onClick={() => handleVote(dispute.id, "against")}
+                      onClick={() => handleVote(dispute, false)}
+                      disabled={isLoading || dispute.status !== "Active"}
                       className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-xl py-4"
                     >
                       <ThumbsDown className="h-5 w-5 mr-2" />
                       Reject
                     </Button>
                   </div>
+                  {dispute.status === "Active" && (
+                    <Button
+                      onClick={() => resolveDispute(dispute)}
+                      disabled={isLoading}
+                      className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4"
+                    >
+                      Resolve Dispute
+                    </Button>
+                  )}
                 </div>
               </div>
 
