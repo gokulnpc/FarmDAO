@@ -37,7 +37,7 @@ In the case of disputes, token holders vote via a decentralized governance syste
 - **Staking Model** for voters (anti-sybil protection)
 - **FDAO Token Economy** (Governance + Redeem for FUSD)
 - **Treasury Yield Farming** (T-Bills, delta-neutral strategies for 3–5% APY)
-- 
+  
 ## 📈 Treasury Strategy (Profitability)
 
 - 40% - Tokenized T-Bills (Stable 4–5% APY)
@@ -45,13 +45,6 @@ In the case of disputes, token holders vote via a decentralized governance syste
 - 20% - Stablecoin Lending (Aave, Compound)
 - 10% - Liquid cash reserve for fast payouts
 
-## 🏆 Hackathon Goals
-
-- Empower farmers with **transparent, fast, and fair insurance payouts**.
-- Build a **self-sustaining decentralized insurance treasury**.
-- Showcase **DAO-driven governance** that rewards honest participation.
-- Combine **DeFi and Real World Data (RWD)** for social good.
-  
 ### 🛠️ [In Progress]
 - 🌐 Cross-Parachain Participation: Building a scalable, accessible ecosystem where users across different Polkadot parachains can participate using XCM messaging and native asset transfers.
 
