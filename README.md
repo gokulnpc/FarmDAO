@@ -1,12 +1,14 @@
 # 🌾 FarmDAO — Decentralized Crop Insurance & Governance on Polkadot 🌾
 
+Try it our here: https://farmdao.vercel.app/
+
 ## 🌟 Overview
 
-FarmDAO is a decentralized insurance and governance platform revolutionizing agricultural insurance through smart contracts, Chainlink oracles, and DAO-driven dispute resolution on the Polkadot network.  
-Farmers purchase parametric crop insurance policies using stablecoins (FUSD), represented as NFTs, ensuring transparent, automated coverage against real-world weather events.  
-In the case of disputes, token holders vote via a decentralized governance system, ensuring fairness, transparency, and economic incentives for honest participation.
+- FarmDAO is a decentralized insurance and governance platform revolutionizing agricultural insurance through smart contracts, Chainlink oracles, and DAO-driven dispute resolution on the Polkadot network.  
+- Farmers purchase parametric crop insurance policies using stablecoins (FUSD), represented as NFTs, ensuring transparent, automated coverage against real-world weather events.  
+- In the case of disputes, token holders vote via a decentralized governance system, ensuring fairness, transparency, and economic incentives for honest participation.
 
-![Description of image](https://drive.google.com/uc?id=1Yyv9mu3I-EcebO1VjZGbonQvjVZELGK_)
+![Image Description](https://drive.google.com/uc?export=view&id=1Yyv9mu3I-EcebO1VjZGbonQvjVZELGK_)
 
 ## 💻 DEMO
 
@@ -28,6 +30,22 @@ In the case of disputes, token holders vote via a decentralized governance syste
 - 🌩 **Decentralized Oracles**: Secure, tamper-proof weather data via Chainlink on Polkadot parachains.
 - 🗳 **Community-Driven Governance**: Token holders resolve disputes through an anonymous, incentivized voting system.
 - 🔒 **Incentive-Aligned Voting**: Honest voters earn FDAO rewards, ensuring unbiased governance participation.
+
+- **Connect Wallet** (Metamask, WalletConnect support)
+- **Buy Insurance** plans using stablecoin (FUSD/WUSD)
+- **Real-Time Weather Monitoring** via Chainlink Oracle
+- **Automatic Payouts** for insured disasters
+- **Dispute Resolution DAO** (vote to approve or reject payout)
+- **Staking Model** for voters (anti-sybil protection)
+- **FDAO Token Economy** (Governance + Redeem for FUSD)
+- **Treasury Yield Farming** (T-Bills, delta-neutral strategies for 3–5% APY)
+  
+## 📈 Treasury Strategy (Profitability)
+
+- 40% - Tokenized T-Bills (Stable 4–5% APY)
+- 30% - Delta-Neutral LPs (low-volatility farming)
+- 20% - Stablecoin Lending (Aave, Compound)
+- 10% - Liquid cash reserve for fast payouts
 
 ### 🛠️ [In Progress]
 - 🌐 Cross-Parachain Participation: Building a scalable, accessible ecosystem where users across different Polkadot parachains can participate using XCM messaging and native asset transfers.
