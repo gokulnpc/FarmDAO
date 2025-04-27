@@ -29,6 +29,29 @@ In the case of disputes, token holders vote via a decentralized governance syste
 - 🗳 **Community-Driven Governance**: Token holders resolve disputes through an anonymous, incentivized voting system.
 - 🔒 **Incentive-Aligned Voting**: Honest voters earn FDAO rewards, ensuring unbiased governance participation.
 
+- **Connect Wallet** (Metamask, WalletConnect support)
+- **Buy Insurance** plans using stablecoin (FUSD/WUSD)
+- **Real-Time Weather Monitoring** via Chainlink Oracle
+- **Automatic Payouts** for insured disasters
+- **Dispute Resolution DAO** (vote to approve or reject payout)
+- **Staking Model** for voters (anti-sybil protection)
+- **FDAO Token Economy** (Governance + Redeem for FUSD)
+- **Treasury Yield Farming** (T-Bills, delta-neutral strategies for 3–5% APY)
+- 
+## 📈 Treasury Strategy (Profitability)
+
+- 40% - Tokenized T-Bills (Stable 4–5% APY)
+- 30% - Delta-Neutral LPs (low-volatility farming)
+- 20% - Stablecoin Lending (Aave, Compound)
+- 10% - Liquid cash reserve for fast payouts
+
+## 🏆 Hackathon Goals
+
+- Empower farmers with **transparent, fast, and fair insurance payouts**.
+- Build a **self-sustaining decentralized insurance treasury**.
+- Showcase **DAO-driven governance** that rewards honest participation.
+- Combine **DeFi and Real World Data (RWD)** for social good.
+  
 ### 🛠️ [In Progress]
 - 🌐 Cross-Parachain Participation: Building a scalable, accessible ecosystem where users across different Polkadot parachains can participate using XCM messaging and native asset transfers.
 
