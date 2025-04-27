@@ -7,20 +7,77 @@ import Link from "next/link";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useWallet } from "@/app/providers/WalletProvider";
+import { InsuranceContract } from "@/app/abi/InsuranceContract";
+import { FUSD } from "@/app/abi/FUSD";
+import { ethers } from "ethers";
+import { toast } from "sonner";
 
 export default function BuyInsurance() {
+  const { currentAccount, provider } = useWallet();
   const [selectedPlan, setSelectedPlan] = useState<string>("premium");
   const [coverageAmount, setCoverageAmount] = useState(5000);
   const [premium, setPremium] = useState(250);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [policyId, setPolicyId] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handlePurchase = () => {
-    // Simulate policy purchase
-    setPolicyId(
-      `FARM-${Math.floor(Math.random() * 10000)}-${new Date().getFullYear()}`
-    );
-    setShowConfirmation(true);
+  const handlePurchase = async () => {
+    if (!currentAccount || !provider) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    try {
+      setIsProcessing(true);
+
+      // Get signer
+      const signer = await provider.getSigner();
+
+      // Create contract instances
+      const fusdContract = new ethers.Contract(FUSD.address, FUSD.abi, signer);
+      const insuranceContract = new ethers.Contract(
+        InsuranceContract.address,
+        InsuranceContract.abi,
+        signer
+      );
+
+      // Convert amounts to wei
+      const premiumInWei = ethers.parseUnits(premium.toString(), 18);
+      const coverageInWei = ethers.parseUnits(coverageAmount.toString(), 18);
+
+      // First approve FUSD transfer
+      const approveTx = await fusdContract.approve(
+        InsuranceContract.address,
+        premiumInWei
+      );
+      await approveTx.wait();
+      toast.success("Premium payment approved");
+
+      // Create policy
+      const createPolicyTx = await insuranceContract.createPolicy(
+        premiumInWei,
+        coverageInWei
+      );
+      const receipt = await createPolicyTx.wait();
+
+      // Get policy ID from event
+      const event = receipt.logs.find(
+        (log: any) => log.fragment?.name === "PolicyCreated"
+      );
+
+      if (event) {
+        const policyIdFromEvent = event.args[0];
+        setPolicyId(policyIdFromEvent.toString());
+        setShowConfirmation(true);
+        toast.success("Policy created successfully!");
+      }
+    } catch (error: any) {
+      console.error("Error purchasing policy:", error);
+      toast.error(error.message || "Failed to purchase policy");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleCoverageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,9 +277,14 @@ export default function BuyInsurance() {
                 </div>
                 <Button
                   onClick={handlePurchase}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl text-lg mt-6"
+                  disabled={isProcessing || !currentAccount}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl text-lg mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Purchase Policy
+                  {isProcessing
+                    ? "Processing..."
+                    : currentAccount
+                    ? "Purchase Policy"
+                    : "Connect Wallet to Purchase"}
                 </Button>
               </div>
             </div>
