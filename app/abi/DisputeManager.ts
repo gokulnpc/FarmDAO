@@ -1,5 +1,5 @@
 export const DisputeManager = {
-  address: "0x15a22976037B6aD359d644a281536BFBBc8797C3",
+  address: "0x23988C9d187A064Feb7EE21dB389B469FbDc6421",
   abi: [
     {
       inputs: [
@@ -126,7 +126,7 @@ export const DisputeManager = {
     {
       inputs: [
         {
-          internalType: "address",
+          internalType: "address payable",
           name: "_governanceDao",
           type: "address",
         },
