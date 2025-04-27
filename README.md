@@ -1,19 +1,28 @@
-# 🌾 FarmDAO — Decentralized Crop Insurance & Governance on Polkadot 🌾
+# 🌾 FarmDAO — Decentralized Crop Insurance & Governance on Polkadot
 
-Try it our here: https://farmdao.vercel.app/
+Try it out here: [https://farmdao.vercel.app/](https://farmdao.vercel.app/)
+
+---
 
 ## 🌟 Overview
 
-- FarmDAO is a decentralized insurance and governance platform revolutionizing agricultural insurance through smart contracts, Chainlink oracles, and DAO-driven dispute resolution on the Polkadot network.  
-- Farmers purchase parametric crop insurance policies using stablecoins (FUSD), represented as NFTs, ensuring transparent, automated coverage against real-world weather events.  
-- In the case of disputes, token holders vote via a decentralized governance system, ensuring fairness, transparency, and economic incentives for honest participation.
+- **FarmDAO** is a decentralized insurance and governance platform revolutionizing agricultural insurance through smart contracts, Chainlink oracles, and DAO-driven dispute resolution on the Polkadot network.
+- Farmers purchase **parametric crop insurance policies** using stablecoins (FUSD), represented as NFTs, ensuring transparent, automated coverage against real-world weather events.
+- In case of disputes, token holders vote via a decentralized governance system, ensuring fairness, transparency, and economic incentives for honest participation.
 
-![Image Description](https://drive.google.com/uc?export=view&id=1Yyv9mu3I-EcebO1VjZGbonQvjVZELGK_)
+---
 
-## 💻 DEMO
+![FarmDAO Demo](https://drive.google.com/uc?export=view&id=1Yyv9mu3I-EcebO1VjZGbonQvjVZELGK_)
 
+---
 
-## 🚀 Contract Addresses on Moonbase Alpha (Moonbeam Testnet)
+## 💻 Demo
+
+> 🌐 Access the live application: [https://farmdao.vercel.app/](https://farmdao.vercel.app/)
+
+---
+
+## 🚀 Smart Contract Deployment (Moonbase Alpha Testnet)
 
 | Contract | Address | Purpose |
 |:---|:---|:---|
@@ -21,35 +30,26 @@ Try it our here: https://farmdao.vercel.app/
 | **GovernanceDAO** | [`0x37035da168BaEE11970019B3fe7377aB3984A18b`](https://moonbase.moonscan.io/address/0x37035da168baee11970019b3fe7377ab3984a18b) | Stake and vote on dispute resolutions |
 | **InsuranceContract** | [`0x7784f99F10b318D41Ea040d4EaAd8f385Ad1f511`](https://moonbase.moonscan.io/address/0x7784f99F10b318D41Ea040d4EaAd8f385Ad1f511) | Buy insurance policies and trigger payouts |
 | **ReceiptNFT** | [`0x20db875112FF5083267A3C19C3812de5eb3C4C8C`](https://moonbase.moonscan.io/address/0x20db875112FF5083267A3C19C3812de5eb3C4C8C) | NFT representing farmer’s insurance policies |
-| **FUSD (Stablecoin)** | [`0xF52593b79C6a6c48DE918C1a3469959029DC3a8e`](https://moonbase.moonscan.io/address/0xF52593b79C6a6c48DE918C1a3469959029DC3a8e) | Payment token for insurance premiums and payouts |
+| **FUSD (Stablecoin)** | [`0xF52593b79C6a6c48DE918C1a3469959029DC3a8e`](https://moonbase.moonscan.io/address/0xF52593b79C6a6c48DE918C1a3469959029DC3a8e) | Stablecoin for premium payments and payouts |
 | **FDAO (Governance Token)** | [`0xaC348bAB58b649a41DC23D108e90d949A8852fa0`](https://moonbase.moonscan.io/address/0xaC348bAB58b649a41DC23D108e90d949A8852fa0) | Governance and staking token for dispute resolution |
 
-> ✨ **Block Explorer:** [Moonbase Moonscan](https://moonbase.moonscan.io/)
-
-> ✨ **RPC Endpoint:** `https://rpc.api.moonbase.moonbeam.network`
+- **Block Explorer:** [Moonbase Moonscan](https://moonbase.moonscan.io/)
+- **RPC Endpoint:** `https://rpc.api.moonbase.moonbeam.network`
 
 ---
 
-## 📂 Contract Descriptions
+## 📂 Smart Contract Structure
 
-- **InsuranceContract.sol**  
-  Handles policy purchase, premium payments, weather-triggered payouts, and minting ReceiptNFTs.
+- **InsuranceContract.sol** — Policy purchase, premium payments, payouts, NFT minting.
+- **DisputeManager.sol** — Manage dispute lifecycle and link with DAO governance.
+- **GovernanceDAO.sol** — Staking, voting, dispute resolution, rewarding voters.
+- **ReceiptNFT.sol** — ERC721 NFT representing crop insurance policies.
+- **FUSD.sol** — ERC20 stablecoin for buying insurance and receiving payouts.
+- **FDAO.sol** — ERC20 governance token for staking, voting, and redemption.
 
-- **DisputeManager.sol**  
-  Manages the dispute lifecycle and interacts with the DAO for resolution.
+👉 [FarmDAO Contracts Repo](https://github.com/Thongnguyentam/FarmDAO-Contracts)
 
-- **GovernanceDAO.sol**  
-  Allows FDAO token holders to stake, vote, and resolve disputes transparently.
-
-- **ReceiptNFT.sol**  
-  ERC721 NFTs representing insured policies.
-
-- **FUSD.sol**  
-  ERC20 stablecoin for buying insurance and receiving payouts.
-
-- **FDAO.sol**  
-  ERC20 governance token for staking, voting, and redeeming for FUSD.
-
+---
 
 ## 📄 Smart Contract Functions
 
@@ -60,127 +60,123 @@ Try it our here: https://farmdao.vercel.app/
 | `GovernanceDAO.sol` | `stakeTokens()`, `voteOnDispute()`, `rewardVoters()` |
 | `RedemptionPool.sol` | `redeemFDAOforFUSD()` |
 
-[FarmDAO Contracts](https://github.com/Thongnguyentam/FarmDAO-Contracts)
+---
 
 ## ✨ Key Features
 
----
+### 🌾 Parametric Crop Insurance
+- Automated payouts based on real-world weather data.
+- Instant, transparent claim settlement via smart contracts.
 
-### 🌾 Parametric Crop Insurance  
-- Instant, automated payouts triggered by real-world weather data using smart contracts.  
-- No need for manual claims or traditional insurance agents.
+### 🖼 On-Chain NFT Insurance Policies
+- Farmers hold **Receipt NFTs** representing their active insurance policies.
 
-### 🖼 On-Chain NFT Insurance Policies  
-- Farmers receive a **Receipt NFT** representing their active insurance coverage.  
-- Full transparency and ownership on-chain.
+### 🌩 Decentralized Oracles
+- Real-time, tamper-proof weather data via **Chainlink Oracles** on Polkadot parachains.
 
-### 🌩 Decentralized Oracles  
-- Secure, tamper-proof real-world weather data sourced from **Chainlink**.  
-- Integrated via oracles operating on **Polkadot parachains** for enhanced reliability.
+### 🗳 Community-Driven Governance
+- FDAO token holders vote anonymously to resolve payout disputes fairly and transparently.
 
-### 🗳 Community-Driven Governance  
-- Disputes are resolved by the community of **FDAO token holders**.  
-- Voting is conducted anonymously to ensure fair, unbiased decisions.
-
-### 🔒 Incentive-Aligned Voting  
-- Honest voters on the majority side earn **FDAO rewards**.  
-- Anti-sybil protection with minimum staking requirements to vote.  
-- Aligns governance participation with platform sustainability.
+### 🔒 Incentive-Aligned Voting
+- Honest voters earn FDAO rewards.
+- Minimum staking requirement ensures participation integrity and prevents sybil attacks.
 
 ---
 
 ## 🛠 Core Platform Functionalities
 
-- **Connect Wallet:**  
-  Seamless Metamask and WalletConnect support for onboarding farmers.
+- Connect Wallet (Metamask, WalletConnect support)
+- Buy Insurance using stablecoins (FUSD/WUSD)
+- Real-Time Weather Monitoring via Chainlink Oracle
+- Automatic Payouts for insured weather events
+- DAO-Based Dispute Resolution (stake & vote)
+- FDAO Token Rewards and Redemption System
+- Treasury Yield Farming:
+  - Tokenized T-Bills (3–5% APY)
+  - Delta-neutral strategies for additional yield
 
-- **Buy Insurance Plans:**  
-  Purchase fixed insurance coverage tiers using **FUSD** or **WUSD** stablecoins.
+---
 
-- **Real-Time Weather Monitoring:**  
-  Chainlink Oracles monitor climate data and trigger payouts based on predefined thresholds.
-
-- **Automatic Disaster Payouts:**  
-  Farmers automatically receive payouts if insured weather events occur — no need for manual intervention.
-
-- **Dispute Resolution DAO:**  
-  In case of contested payouts, FDAO token holders vote to approve or reject the payout transparently.
-
-- **Staking Model for Governance:**  
-  Voters must stake FDAO tokens to participate in voting, preventing spam and malicious votes.
-
-- **FDAO Token Economy:**  
-  Earn FDAO tokens by participating in governance.  
-  Redeem FDAO tokens for FUSD at a fixed rate via the redemption pool.
-
-- **Treasury Yield Farming:**  
-  Insurance premiums are invested into low-risk strategies:  
-  - Tokenized T-Bills (3–5% APY)  
-  - Delta-neutral liquidity pools for sustainable treasury growth.
-  
 ## 📈 Treasury Strategy (Profitability)
 
-- 40% - Tokenized T-Bills (Stable 4–5% APY)
-- 30% - Delta-Neutral LPs (low-volatility farming)
-- 20% - Stablecoin Lending (Aave, Compound)
-- 10% - Liquid cash reserve for fast payouts
+| Asset Strategy | Allocation | Notes |
+|:---|:---|:---|
+| Tokenized T-Bills | 40% | Stable 4–5% APY |
+| Delta-Neutral LPs | 30% | Low-volatility farming |
+| Stablecoin Lending | 20% | Aave, Compound pools |
+| Liquid Cash Reserve | 10% | Fast payouts anytime |
 
-### 🛠️ [In Progress]
-- 🌐 Cross-Parachain Participation: Building a scalable, accessible ecosystem where users across different Polkadot parachains can participate using XCM messaging and native asset transfers.
+---
 
-- 🔒 Enhanced Payout Security: Strengthening payout mechanisms with Polkadot multisig accounts for even higher security and transparency.
+## 🛠️ In Progress (Future Enhancements)
 
-- 📡 Advanced Decentralized Oracle Integration: Deepening integration with Chainlink's Decentralized Oracle Network to fetch real-time, on-chain weather data more efficiently.
+- 🌐 **Cross-Parachain Participation:**  
+  Enabling users across different Polkadot parachains using XCM and native asset transfers.
+
+- 🔒 **Enhanced Payout Security:**  
+  Using Polkadot multisig accounts for highly secure, verifiable payouts.
+
+- 📡 **Advanced Decentralized Oracle Integration:**  
+  Deeper integration with Chainlink DON (Decentralized Oracle Network) for even faster, on-chain weather data.
+
+---
 
 ## ❄️ Project Structure
+
 ```
 FarmDao-Frontend/
-├── app                       # Main directory of front-end app
-│   ├── abi/                  # abi of the contracts
-│   ├── 
+├── app/
+│   ├── abi/                  # Smart contract ABIs
+│   ├── components/            # Frontend UI components
+│   ├── pages/                 # Pages and routing
 │
-├── services/                 # Backend services
-│   └── PinataService.py      # IPFS to story metadata
-│   └── WeatherService.ts     # Weather-API 
-├── ...
+├── services/                  
+│   ├── PinataService.ts       # IPFS upload for metadata storage
+│   ├── WeatherService.ts      # Weather API service
+│
 FarmDao-Contracts/
-├── contracts/                # Contracts main folder
-│   └── ...
-│   └── DisputManager.sol     
-│   └── InsuranceContract.sol      
+├── contracts/                 
+│   ├── InsuranceContract.sol
+│   ├── DisputeManager.sol
+│   ├── GovernanceDAO.sol
+│   ├── ReceiptNFT.sol
 │
-├── test/                     # test file for the contract
-├── hardhat.config.ts         # Configuratiton for deployed network
+├── test/                      # Unit tests for smart contracts
+├── hardhat.config.ts          # Hardhat configuration
 ```
+
+---
 
 ## 💻 Technology Stack
 
 ### ⛓️ Blockchain & Smart Contracts
-
 ![Polkadot](https://img.shields.io/badge/Polkadot-E6007A?style=for-the-badge&logo=Polkadot&logoColor=white)
 ![Solidity](https://img.shields.io/badge/Solidity-363636?style=for-the-badge&logo=solidity&logoColor=white)
 ![Hardhat](https://img.shields.io/badge/Hardhat-FFD700?style=for-the-badge&logo=hardhat&logoColor=black)
 
-
 ### 🎨 Frontend & UI
-
 ![Next.js](https://img.shields.io/badge/Next.js%2014-000000?style=for-the-badge&logo=next.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-### 📦 Storage & IPFS
-
+### 📦 Storage & Data
 ![Pinata](https://img.shields.io/badge/Pinata-E4405F?style=for-the-badge&logo=pinata&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-E4405F?style=for-the-badge&logo=mongoDB&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 
+---
 
+## 👥 Contributors
 
-## 👥 Built By
+- **Gokuleshwaran Narayanan**
+- **Dylan**
 
-FarmDao is developed by a team of top university researchers and blockchain developers, passionate about crypto, AI, and market analytics.
+---
 
 ## 🤝 Support
 
-For support, please reach out to our team or join our community channels.
+For support or questions, feel free to reach out or join our community discussions.
 
-_Powered by Polkadot - Revolutionizing the farm economy, one token at a time._
+---
+
+# 🌟  
+_"Powered by Polkadot — Revolutionizing the farm economy, one policy at a time."_
