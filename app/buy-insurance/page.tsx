@@ -66,12 +66,13 @@ const storePolicyInDB = async (
 const getTierImage = (tier: string) => {
   switch (tier.toLowerCase()) {
     case "premium":
-      return "/premium-farm-insurance.png";
+      return "/premium.jpeg";
     case "standard":
-      return "/standard-farm-insurance.png";
+      return "/standard.jpeg";
     case "basic":
+      return "/basic.jpeg";
     default:
-      return "/basic-farm-insurance.png";
+      return "/premium.jpeg";
   }
 };
 
@@ -216,8 +217,8 @@ export default function BuyInsurance() {
       const policyId = event.args[0].toString();
       setPolicyId(policyId);
 
-      // Store policy in database
-      const response = await fetch("/api/policies", {
+      // Store policy details in database
+      const policyDetailsResponse = await fetch("/api/policy-details", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -225,16 +226,42 @@ export default function BuyInsurance() {
         body: JSON.stringify({
           userAddress: currentAccount,
           policyId,
-          latitude: coordinates.lat,
-          longitude: coordinates.lng,
+          location: {
+            type: "Point",
+            coordinates: [coordinates.lng, coordinates.lat], // MongoDB expects [longitude, latitude]
+          },
+          address: locationAddress,
           premium: formData.premium,
           coverageAmount: formData.coverageAmount,
           tier: formData.tier,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to store policy in database");
+      if (!policyDetailsResponse.ok) {
+        throw new Error("Failed to store policy details in database");
+      }
+
+      // Also store in the original policies collection for backward compatibility
+      const policyResponse = await fetch("/api/policies", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userAddress: currentAccount,
+          policyId,
+          location: {
+            type: "Point",
+            coordinates: [coordinates.lng, coordinates.lat],
+          },
+          premium: formData.premium,
+          coverageAmount: formData.coverageAmount,
+          tier: formData.tier,
+        }),
+      });
+
+      if (!policyResponse.ok) {
+        console.warn("Failed to store in original policies collection");
       }
 
       toast.success("Policy created successfully!");
