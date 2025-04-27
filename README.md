@@ -22,6 +22,14 @@ Try it out here: [https://farmdao.vercel.app/](https://farmdao.vercel.app/)
 
 ---
 
+## 💻 Demo Video
+
+[![FarmDAO Demo](https://img.youtube.com/vi/Zg_fGW89kMY/0.jpg)](https://youtu.be/Zg_fGW89kMY)
+
+> 📺 **Watch the full demo:** [https://youtu.be/Zg_fGW89kMY](https://youtu.be/Zg_fGW89kMY)
+
+---
+
 ## 🚀 Smart Contract Deployment (Moonbase Alpha Testnet)
 
 | Contract | Address | Purpose |
