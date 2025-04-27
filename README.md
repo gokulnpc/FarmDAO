@@ -17,6 +17,8 @@ In the case of disputes, token holders vote via a decentralized governance syste
 - **InsuranceContract**: 
 - **ReceiptNFT**: 
 
+[FarmDAO Contracts](https://github.com/Thongnguyentam/FarmDAO-Contracts)
+
 ## 🎯 Key Features
 
 - 🌾 **Parametric Crop Insurance**: Instant, automated payouts triggered by real-world weather data.
