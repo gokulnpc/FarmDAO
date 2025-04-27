@@ -1,11 +1,12 @@
-🌾 FarmDAO — Decentralized Crop Insurance & Governance on Polkadot 🌾
+# 🌾 FarmDAO — Decentralized Crop Insurance & Governance on Polkadot 🌾
+
+## 🌟 Overview
 
 FarmDAO is a decentralized insurance and governance platform revolutionizing agricultural insurance through smart contracts, Chainlink oracles, and DAO-driven dispute resolution on the Polkadot network.  
 Farmers purchase parametric crop insurance policies using stablecoins (FUSD), represented as NFTs, ensuring transparent, automated coverage against real-world weather events.  
 In the case of disputes, token holders vote via a decentralized governance system, ensuring fairness, transparency, and economic incentives for honest participation.
 
 ![Description of image](https://drive.google.com/uc?id=1Yyv9mu3I-EcebO1VjZGbonQvjVZELGK_)
-## 🌟 Overview
 
 ## 💻 DEMO
 
