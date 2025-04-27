@@ -13,9 +13,11 @@ In the case of disputes, token holders vote via a decentralized governance syste
 ## 🚀 Contract Address on testnet:
 
 - **DisputeManager**: 
-- **GovernanceDao**: 
-- **InsuranceContract**: 
+0x15a22976037B6aD359d644a281536BFBBc8797C3
+- **GovernanceDao**: 0xb8F156806f8aEcc25A69c2EFC5a414E326F1E616
+- **InsuranceContract**: 0x7784f99F10b318D41Ea040d4EaAd8f385Ad1f511
 - **ReceiptNFT**: 
+0x20db875112FF5083267A3C19C3812de5eb3C4C8C
 
 [FarmDAO Contracts](https://github.com/Thongnguyentam/FarmDAO-Contracts)
 
