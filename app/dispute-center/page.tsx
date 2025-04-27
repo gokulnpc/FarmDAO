@@ -1,11 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { ArrowRight, Clock, Facebook, Instagram, ThumbsDown, ThumbsUp, Wallet } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Clock,
+  Facebook,
+  Instagram,
+  ThumbsDown,
+  ThumbsUp,
+  Wallet,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function DisputeCenter() {
   const [disputes, setDisputes] = useState([
@@ -24,7 +32,8 @@ export default function DisputeCenter() {
       id: "DISP-5678",
       policyId: "FARM-9012-2024",
       farmer: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-      description: "Flood damage claim disputed due to policy coverage limitations",
+      description:
+        "Flood damage claim disputed due to policy coverage limitations",
       requestedAmount: 5000,
       votesFor: 48,
       votesAgainst: 52,
@@ -42,9 +51,9 @@ export default function DisputeCenter() {
       timeRemaining: "Ended",
       status: "Approved",
     },
-  ])
+  ]);
 
-  const [userStake, setUserStake] = useState(50)
+  const [userStake, setUserStake] = useState(50);
 
   const handleVote = (disputeId: string, voteType: "for" | "against") => {
     setDisputes(
@@ -55,19 +64,19 @@ export default function DisputeCenter() {
               ...dispute,
               votesFor: dispute.votesFor + 5,
               votesAgainst: dispute.votesAgainst - 5,
-            }
+            };
           } else {
             return {
               ...dispute,
               votesFor: dispute.votesFor - 5,
               votesAgainst: dispute.votesAgainst + 5,
-            }
+            };
           }
         }
-        return dispute
-      }),
-    )
-  }
+        return dispute;
+      })
+    );
+  };
 
   return (
     <div className="min-h-screen bg-neutral-800 text-white p-4 md:p-8">
@@ -78,7 +87,11 @@ export default function DisputeCenter() {
             <Link href="/" className="flex items-center">
               <div className="text-white font-semibold text-xl flex items-center">
                 <div className="w-8 h-8 mr-2">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path d="M3 9H7V21H3V9Z" fill="white" />
                     <path d="M10 3H21V7H10V3Z" fill="white" />
                     <path d="M10 10H21V21H17V14H10V10Z" fill="white" />
@@ -109,7 +122,10 @@ export default function DisputeCenter() {
                 <div className="w-2 h-2 bg-black rounded-full"></div>
               </div>
             </button>
-            <Link href="/dashboard" className="bg-green-600 text-white px-6 py-3 rounded-full flex items-center">
+            <Link
+              href="/dashboard"
+              className="bg-green-600 text-white px-6 py-3 rounded-full flex items-center"
+            >
               <Wallet className="mr-2 h-4 w-4" />
               Dashboard
             </Link>
@@ -120,7 +136,8 @@ export default function DisputeCenter() {
         <div className="mb-10">
           <h1 className="text-4xl font-serif mb-4">Dispute Center</h1>
           <p className="text-neutral-400">
-            Vote on open disputes using your staked FDAO tokens. Help ensure fair outcomes for all farmers.
+            Vote on open disputes using your staked FDAO tokens. Help ensure
+            fair outcomes for all farmers.
           </p>
         </div>
 
@@ -131,11 +148,16 @@ export default function DisputeCenter() {
               <div>
                 <h3 className="text-xl font-bold mb-2">Your Voting Power</h3>
                 <p className="text-green-400 mb-1">
-                  <span className="text-2xl font-bold">{userStake} FDAO</span> staked for voting
+                  <span className="text-2xl font-bold">{userStake} FDAO</span>{" "}
+                  staked for voting
                 </p>
-                <p className="text-sm text-neutral-300">Stake more FDAO tokens to increase your voting influence</p>
+                <p className="text-sm text-neutral-300">
+                  Stake more FDAO tokens to increase your voting influence
+                </p>
               </div>
-              <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full">Stake More FDAO</Button>
+              <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full">
+                Stake More FDAO
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -147,13 +169,18 @@ export default function DisputeCenter() {
 
         <div className="space-y-6">
           {disputes.map((dispute) => (
-            <div key={dispute.id} className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6">
+            <div
+              key={dispute.id}
+              className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6"
+            >
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="text-xl font-bold">Dispute {dispute.id}</h3>
                   <p className="text-neutral-400">Policy {dispute.policyId}</p>
                 </div>
-                <Badge className="bg-blue-500/20 text-blue-400 text-sm px-3 py-1">{dispute.status}</Badge>
+                <Badge className="bg-blue-500/20 text-blue-400 text-sm px-3 py-1">
+                  {dispute.status}
+                </Badge>
               </div>
 
               <p className="text-lg mb-6">{dispute.description}</p>
@@ -163,13 +190,16 @@ export default function DisputeCenter() {
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Farmer</span>
                     <span>
-                      {dispute.farmer.substring(0, 6)}...{dispute.farmer.substring(dispute.farmer.length - 4)}
+                      {dispute.farmer.substring(0, 6)}...
+                      {dispute.farmer.substring(dispute.farmer.length - 4)}
                     </span>
                   </div>
 
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Requested Amount</span>
-                    <span className="font-bold">{dispute.requestedAmount.toLocaleString()} FUSD</span>
+                    <span className="font-bold">
+                      {dispute.requestedAmount.toLocaleString()} FUSD
+                    </span>
                   </div>
 
                   <div className="flex justify-between">
@@ -186,11 +216,15 @@ export default function DisputeCenter() {
                     <div className="flex justify-between mb-2">
                       <span>Current Vote</span>
                       <span>
-                        {dispute.votesFor}% Approve / {dispute.votesAgainst}% Reject
+                        {dispute.votesFor}% Approve / {dispute.votesAgainst}%
+                        Reject
                       </span>
                     </div>
                     <div className="h-2 bg-red-900/30 rounded-full overflow-hidden">
-                      <div className="h-full bg-green-500 rounded-full" style={{ width: `${dispute.votesFor}%` }}></div>
+                      <div
+                        className="h-full bg-green-500 rounded-full"
+                        style={{ width: `${dispute.votesFor}%` }}
+                      ></div>
                     </div>
                   </div>
 
@@ -214,7 +248,10 @@ export default function DisputeCenter() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-neutral-800">
-                <Link href="#" className="text-neutral-400 hover:text-white flex items-center">
+                <Link
+                  href="#"
+                  className="text-neutral-400 hover:text-white flex items-center"
+                >
                   View evidence and oracle data
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
@@ -224,5 +261,5 @@ export default function DisputeCenter() {
         </div>
       </div>
     </div>
-  )
+  );
 }

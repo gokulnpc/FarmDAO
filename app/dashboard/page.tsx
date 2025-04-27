@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { ArrowRight, Bell, Facebook, Instagram, Wallet } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight, Bell, Facebook, Instagram, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 export default function Dashboard() {
-  const [isConnected, setIsConnected] = useState(false)
-  const [walletAddress, setWalletAddress] = useState("")
+  const [isConnected, setIsConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
 
   const connectWallet = () => {
     // Simulate wallet connection
-    setIsConnected(true)
-    setWalletAddress("0x71C7656EC7ab88b098defB751B7401B5f6d8976F")
-  }
+    setIsConnected(true);
+    setWalletAddress("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
+  };
 
   return (
     <div className="min-h-screen bg-neutral-800 text-white p-4 md:p-8">
@@ -27,7 +27,11 @@ export default function Dashboard() {
             <Link href="/" className="flex items-center">
               <div className="text-white font-semibold text-xl flex items-center">
                 <div className="w-8 h-8 mr-2">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path d="M3 9H7V21H3V9Z" fill="white" />
                     <path d="M10 3H21V7H10V3Z" fill="white" />
                     <path d="M10 10H21V21H17V14H10V10Z" fill="white" />
@@ -61,10 +65,14 @@ export default function Dashboard() {
             {isConnected ? (
               <div className="bg-green-600 text-white px-6 py-3 rounded-full flex items-center">
                 <Wallet className="mr-2 h-4 w-4" />
-                {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
+                {walletAddress.substring(0, 6)}...
+                {walletAddress.substring(walletAddress.length - 4)}
               </div>
             ) : (
-              <button onClick={connectWallet} className="bg-green-600 text-white px-6 py-3 rounded-full">
+              <button
+                onClick={connectWallet}
+                className="bg-green-600 text-white px-6 py-3 rounded-full"
+              >
                 Connect Wallet
               </button>
             )}
@@ -75,7 +83,8 @@ export default function Dashboard() {
         <div className="mb-10">
           <h1 className="text-4xl font-serif mb-4">Dashboard</h1>
           <p className="text-neutral-400">
-            Welcome to your FarmDAO dashboard. Manage your insurance policies and tokens.
+            Welcome to your FarmDAO dashboard. Manage your insurance policies
+            and tokens.
           </p>
         </div>
 
@@ -87,15 +96,34 @@ export default function Dashboard() {
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
                     <span>FUSD Balance</span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                      <path d="M8 12H16M12 8V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M8 12H16M12 8V16"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
                     </svg>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-bold">1,250.00</div>
-                  <div className="text-sm mt-2">Stablecoin for insurance premiums</div>
+                  <div className="text-sm mt-2">
+                    Stablecoin for insurance premiums
+                  </div>
                 </CardContent>
               </Card>
 
@@ -103,7 +131,13 @@ export default function Dashboard() {
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
                     <span>FDAO Balance</span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <path
                         d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
                         stroke="currentColor"
@@ -124,7 +158,9 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-bold">75.50</div>
-                  <div className="text-sm mt-2">Governance token for voting rights</div>
+                  <div className="text-sm mt-2">
+                    Governance token for voting rights
+                  </div>
                 </CardContent>
               </Card>
 
@@ -139,7 +175,11 @@ export default function Dashboard() {
                   <div className="text-2xl font-bold mb-2">Active</div>
                   <div className="text-sm mb-2">Coverage: 5,000 FUSD</div>
                   <div className="text-sm mb-3">Expires in 45 days</div>
-                  <Progress value={62} className="h-2 bg-green-800" indicatorClassName="bg-green-400" />
+                  <Progress
+                    value={62}
+                    className="h-2 bg-green-800"
+                    indicatorClassName="bg-green-400"
+                  />
                 </CardContent>
               </Card>
             </div>
@@ -152,7 +192,9 @@ export default function Dashboard() {
               >
                 <div>
                   <h3 className="text-xl font-bold mb-2">Buy Insurance</h3>
-                  <p className="text-sm text-neutral-400">Protect your crops from weather events</p>
+                  <p className="text-sm text-neutral-400">
+                    Protect your crops from weather events
+                  </p>
                 </div>
                 <ArrowRight className="h-6 w-6 text-green-400" />
               </Link>
@@ -163,7 +205,9 @@ export default function Dashboard() {
               >
                 <div>
                   <h3 className="text-xl font-bold mb-2">My Policies</h3>
-                  <p className="text-sm text-neutral-400">View your active and past policies</p>
+                  <p className="text-sm text-neutral-400">
+                    View your active and past policies
+                  </p>
                 </div>
                 <ArrowRight className="h-6 w-6 text-green-400" />
               </Link>
@@ -174,7 +218,9 @@ export default function Dashboard() {
               >
                 <div>
                   <h3 className="text-xl font-bold mb-2">Dispute Center</h3>
-                  <p className="text-sm text-neutral-400">Vote on open disputes</p>
+                  <p className="text-sm text-neutral-400">
+                    Vote on open disputes
+                  </p>
                 </div>
                 <ArrowRight className="h-6 w-6 text-green-400" />
               </Link>
@@ -185,7 +231,9 @@ export default function Dashboard() {
               >
                 <div>
                   <h3 className="text-xl font-bold mb-2">Redeem FDAO</h3>
-                  <p className="text-sm text-neutral-400">Convert FDAO tokens to FUSD</p>
+                  <p className="text-sm text-neutral-400">
+                    Convert FDAO tokens to FUSD
+                  </p>
                 </div>
                 <ArrowRight className="h-6 w-6 text-green-400" />
               </Link>
@@ -201,21 +249,27 @@ export default function Dashboard() {
                   <div className="flex justify-between items-center p-3 bg-neutral-700 rounded-xl">
                     <div>
                       <div className="font-medium">Policy #1234 Purchased</div>
-                      <div className="text-sm text-neutral-400">Premium: 250 FUSD • Coverage: 5,000 FUSD</div>
+                      <div className="text-sm text-neutral-400">
+                        Premium: 250 FUSD • Coverage: 5,000 FUSD
+                      </div>
                     </div>
                     <div className="text-sm text-neutral-400">2 days ago</div>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-neutral-700 rounded-xl">
                     <div>
                       <div className="font-medium">FDAO Staked</div>
-                      <div className="text-sm text-neutral-400">Amount: 25 FDAO</div>
+                      <div className="text-sm text-neutral-400">
+                        Amount: 25 FDAO
+                      </div>
                     </div>
                     <div className="text-sm text-neutral-400">5 days ago</div>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-neutral-700 rounded-xl">
                     <div>
                       <div className="font-medium">FUSD Deposited</div>
-                      <div className="text-sm text-neutral-400">Amount: 1,500 FUSD</div>
+                      <div className="text-sm text-neutral-400">
+                        Amount: 1,500 FUSD
+                      </div>
                     </div>
                     <div className="text-sm text-neutral-400">1 week ago</div>
                   </div>
@@ -236,7 +290,8 @@ export default function Dashboard() {
             </div>
             <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
             <p className="text-neutral-400 max-w-md mx-auto mb-8">
-              Connect your wallet to access your dashboard, view your policies, and manage your tokens.
+              Connect your wallet to access your dashboard, view your policies,
+              and manage your tokens.
             </p>
             <Button
               onClick={connectWallet}
@@ -248,5 +303,5 @@ export default function Dashboard() {
         )}
       </div>
     </div>
-  )
+  );
 }

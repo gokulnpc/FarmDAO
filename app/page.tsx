@@ -1,6 +1,6 @@
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowRight, Globe, Send, Sun } from "lucide-react"
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, Globe, Send, Sun } from "lucide-react";
 
 export default function Home() {
   return (
@@ -12,7 +12,11 @@ export default function Home() {
             <div className="flex items-center group">
               <div className="text-white font-semibold text-xl flex items-center">
                 <div className="w-8 h-8 mr-2 transition-transform duration-500 group-hover:rotate-90">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
                       d="M3 9H7V21H3V9Z"
                       fill="white"
@@ -65,8 +69,22 @@ export default function Home() {
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 text-green-900 opacity-20 z-0 animate-pulse-slow"
                   viewBox="0 0 100 100"
                 >
-                  <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" fill="none" />
-                  <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="30"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
                 </svg>
               </span>
               <br />
@@ -97,7 +115,11 @@ export default function Home() {
 
           {/* Curved Arrow */}
           <div className="absolute right-0 top-0 w-40 h-40 text-green-400 opacity-30 animate-draw-arrow">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              viewBox="0 0 100 100"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M10 90 C 30 30, 70 30, 90 10"
                 stroke="currentColor"
@@ -118,7 +140,9 @@ export default function Home() {
             <span className="text-xl font-bold mr-2 group-hover:text-green-800 transition-colors duration-300">
               5000+
             </span>
-            <span className="text-xs uppercase">Farmers protected by our platform</span>
+            <span className="text-xs uppercase">
+              Farmers protected by our platform
+            </span>
 
             <Link
               href="/dashboard"
@@ -134,7 +158,13 @@ export default function Home() {
               className="bg-neutral-700 text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-neutral-600 transition-colors duration-300 group"
             >
               <div className="animate-spin">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M12 2V6M12 18V22M6 12H2M22 12H18M19.07 4.93L16.24 7.76M7.76 16.24L4.93 19.07M19.07 19.07L16.24 16.24M7.76 7.76L4.93 4.93"
                     stroke="currentColor"
@@ -179,7 +209,13 @@ export default function Home() {
             </div>
             <div className="w-40 h-40 bg-green-300 rounded-full absolute -bottom-20 -right-20 group-hover:bg-green-400 transition-all duration-500"></div>
             <div className="text-green-900 text-8xl font-bold absolute top-10 left-10 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
-              <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width="100"
+                height="100"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path d="M3 9H7V21H3V9Z" fill="currentColor" />
                 <path d="M10 3H21V7H10V3Z" fill="currentColor" />
                 <path d="M10 10H21V21H17V14H10V10Z" fill="currentColor" />
@@ -217,7 +253,11 @@ export default function Home() {
           {/* Card 3 - Mission */}
           <div className="bg-green-200 rounded-3xl p-6 aspect-square relative overflow-hidden group hover:bg-green-300 transition-all duration-500">
             <div className="absolute top-0 right-0 w-full h-full opacity-10 group-hover:opacity-20 transition-opacity duration-500">
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="animate-spin-slow">
+              <svg
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+                className="animate-spin-slow"
+              >
                 <path
                   d="M0,50 C0,50 50,0 100,50 C100,50 50,100 0,50 Z"
                   fill="none"
@@ -245,7 +285,8 @@ export default function Home() {
               </div>
               <ArrowRight className="text-green-900 mb-4 transform group-hover:translate-x-2 transition-transform duration-300" />
               <div className="text-green-900 text-xl mt-auto transform group-hover:translate-y-2 transition-transform duration-500">
-                Our mission is to make crop insurance accessible to all farmers through decentralized technology.
+                Our mission is to make crop insurance accessible to all farmers
+                through decentralized technology.
               </div>
             </div>
           </div>
@@ -298,5 +339,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  )
+  );
 }
