@@ -19,37 +19,50 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useWallet } from "@/app/providers/WalletProvider";
 import { FUSD } from "@/app/abi/FUSD";
+import { FDAO } from "@/app/abi/FDAO";
 import { ethers } from "ethers";
 import { toast } from "sonner";
 
 export default function Dashboard() {
   const { currentAccount, connectWallet, isLoading, provider } = useWallet();
   const [fusdBalance, setFusdBalance] = useState<string>("0");
+  const [fdaoBalance, setFdaoBalance] = useState<number>(0);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [buyStep, setBuyStep] = useState(0);
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [processingPayment, setProcessingPayment] = useState(false);
 
   useEffect(() => {
-    const fetchFUSDBalance = async () => {
+    const fetchBalances = async () => {
       if (provider && currentAccount) {
         try {
-          const contract = new ethers.Contract(
+          // Fetch FUSD Balance
+          const fusdContract = new ethers.Contract(
             FUSD.address,
             FUSD.abi,
             provider
           );
-          const balance = await contract.balanceOf(currentAccount);
-          // Convert from wei to FUSD (assuming 18 decimals)
-          const formattedBalance = ethers.formatUnits(balance, 18);
-          setFusdBalance(formattedBalance);
+          const fusdBal = await fusdContract.balanceOf(currentAccount);
+          setFusdBalance(ethers.formatUnits(fusdBal, 0));
+
+          // Fetch FDAO Balance
+          const fdaoContract = new ethers.Contract(
+            FDAO.address,
+            FDAO.abi,
+            provider
+          );
+          console.log("Current Account", currentAccount);
+          const fdaoBal = await fdaoContract.balanceOf(currentAccount);
+          console.log("FDAO Balance", fdaoBal);
+          setFdaoBalance(ethers.toNumber(fdaoBal));
         } catch (error) {
-          console.error("Error fetching FUSD balance:", error);
+          console.error("Error fetching balances:", error);
+          toast.error("Failed to fetch token balances");
         }
       }
     };
 
-    fetchFUSDBalance();
+    fetchBalances();
   }, [provider, currentAccount]);
 
   const handleBuyFUSD = () => {
@@ -70,7 +83,7 @@ export default function Dashboard() {
 
       // Create admin wallet from private key
       const adminWallet = new ethers.Wallet(
-        "0c6aaedebed8f32db344a74f5fda724c42a1b7053450ebfecd29ba0e0922dd6b",
+        process.env.NEXT_PUBLIC_ADMIN_PRIVATE_KEY as string,
         provider
       );
 
@@ -78,7 +91,7 @@ export default function Dashboard() {
       const contract = new ethers.Contract(FUSD.address, FUSD.abi, adminWallet);
 
       // Convert amount to wei (18 decimals)
-      const amountInWei = ethers.parseUnits(amount.toString(), 18);
+      const amountInWei = ethers.parseUnits(amount.toString(), 0);
 
       // Mint FUSD tokens
       const tx = await contract.mint(currentAccount, amountInWei);
@@ -276,7 +289,12 @@ export default function Dashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-4xl font-bold">75.50</div>
+                  <div className="text-4xl font-bold">
+                    {Number(fdaoBalance).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </div>
                   <div className="text-sm mt-2">
                     Governance token for voting rights
                   </div>
