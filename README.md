@@ -23,6 +23,16 @@ Try it our here: https://farmdao.vercel.app/
 
 [FarmDAO Contracts](https://github.com/Thongnguyentam/FarmDAO-Contracts)
 
+## 📄 Smart Contract Functions
+
+| Contract | Key Functions |
+|:---|:---|
+| `InsuranceContract.sol` | `buyPolicy()`, `triggerPayout()`, `openDisputeWindow()` |
+| `DisputeManager.sol` | `proposeDispute()`, `resolveDispute()` |
+| `GovernanceDAO.sol` | `stakeTokens()`, `voteOnDispute()`, `rewardVoters()` |
+| `RedemptionPool.sol` | `redeemFDAOforFUSD()` |
+
+
 ## 🎯 Key Features
 
 - 🌾 **Parametric Crop Insurance**: Instant, automated payouts triggered by real-world weather data.
