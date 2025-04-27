@@ -1,21 +1,193 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Bell, Facebook, Instagram, Wallet } from "lucide-react";
+import {
+  ArrowRight,
+  Bell,
+  Facebook,
+  Instagram,
+  Wallet,
+  Building2,
+  CreditCard,
+  X,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useWallet } from "@/app/providers/WalletProvider";
+import { FUSD } from "@/app/abi/FUSD";
+import { ethers } from "ethers";
+import { toast } from "sonner";
 
 export default function Dashboard() {
-  const [isConnected, setIsConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState("");
+  const { currentAccount, connectWallet, isLoading, provider } = useWallet();
+  const [fusdBalance, setFusdBalance] = useState<string>("0");
+  const [showBuyModal, setShowBuyModal] = useState(false);
+  const [buyStep, setBuyStep] = useState(0);
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [processingPayment, setProcessingPayment] = useState(false);
 
-  const connectWallet = () => {
-    // Simulate wallet connection
-    setIsConnected(true);
-    setWalletAddress("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");
+  useEffect(() => {
+    const fetchFUSDBalance = async () => {
+      if (provider && currentAccount) {
+        try {
+          const contract = new ethers.Contract(
+            FUSD.address,
+            FUSD.abi,
+            provider
+          );
+          const balance = await contract.balanceOf(currentAccount);
+          // Convert from wei to FUSD (assuming 18 decimals)
+          const formattedBalance = ethers.formatUnits(balance, 18);
+          setFusdBalance(formattedBalance);
+        } catch (error) {
+          console.error("Error fetching FUSD balance:", error);
+        }
+      }
+    };
+
+    fetchFUSDBalance();
+  }, [provider, currentAccount]);
+
+  const handleBuyFUSD = () => {
+    setShowBuyModal(true);
+    setBuyStep(0);
+  };
+
+  const handleAmountSelect = (amount: number) => {
+    setSelectedAmount(amount);
+    setBuyStep(1);
+  };
+
+  const mintFUSD = async (amount: number) => {
+    try {
+      if (!currentAccount || !provider) return;
+
+      setProcessingPayment(true);
+
+      // Create admin wallet from private key
+      const adminWallet = new ethers.Wallet(
+        "0c6aaedebed8f32db344a74f5fda724c42a1b7053450ebfecd29ba0e0922dd6b",
+        provider
+      );
+
+      // Create contract instance with admin signer
+      const contract = new ethers.Contract(FUSD.address, FUSD.abi, adminWallet);
+
+      // Convert amount to wei (18 decimals)
+      const amountInWei = ethers.parseUnits(amount.toString(), 18);
+
+      // Mint FUSD tokens
+      const tx = await contract.mint(currentAccount, amountInWei);
+      await tx.wait();
+
+      // Update balance after minting
+      const newBalance = await contract.balanceOf(currentAccount);
+      setFusdBalance(ethers.formatUnits(newBalance, 18));
+
+      setBuyStep(2);
+      toast.success("FUSD minted successfully!");
+
+      // Auto close after success
+      setTimeout(() => {
+        setShowBuyModal(false);
+        setBuyStep(0);
+        setSelectedAmount(null);
+      }, 3000);
+    } catch (error) {
+      console.error("Error minting FUSD:", error);
+      toast.error("Failed to mint FUSD. Please try again.");
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
+
+  const simulatePayment = async () => {
+    if (!selectedAmount) return;
+    await mintFUSD(selectedAmount);
+  };
+
+  const BuyFUSDModal = () => {
+    if (!showBuyModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-[#1a1a1a] rounded-3xl p-8 max-w-md w-full mx-4">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Buy FUSD</h2>
+            <button
+              onClick={() => setShowBuyModal(false)}
+              className="text-neutral-400 hover:text-white"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          {buyStep === 0 && (
+            <div className="space-y-4">
+              <p className="text-neutral-400 mb-6">Select amount to buy:</p>
+              {[100, 500, 1000, 5000].map((amount) => (
+                <button
+                  key={amount}
+                  onClick={() => handleAmountSelect(amount)}
+                  className="w-full bg-neutral-700 hover:bg-neutral-600 p-4 rounded-xl flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="bg-green-900 p-2 rounded-lg">
+                      <CreditCard className="h-6 w-6 text-green-400" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-medium">{amount} FUSD</div>
+                      <div className="text-sm text-neutral-400">
+                        ${amount}.00 USD
+                      </div>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-green-400 transform group-hover:translate-x-1 transition-transform" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {buyStep === 1 && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="bg-neutral-700 rounded-full p-4 inline-block mb-4">
+                  <Building2 className="h-8 w-8 text-green-400" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Connect Bank Account</h3>
+                <p className="text-neutral-400 mb-6">
+                  Securely connect your bank account to purchase{" "}
+                  {selectedAmount} FUSD
+                </p>
+              </div>
+              <button
+                onClick={simulatePayment}
+                disabled={processingPayment}
+                className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed py-4 rounded-xl font-medium transition-colors"
+              >
+                {processingPayment ? "Processing..." : "Connect Bank & Pay"}
+              </button>
+            </div>
+          )}
+
+          {buyStep === 2 && (
+            <div className="text-center">
+              <div className="bg-green-900 rounded-full p-4 inline-block mb-4">
+                <CheckCircle2 className="h-8 w-8 text-green-400" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Purchase Successful!</h3>
+              <p className="text-neutral-400">
+                You have successfully purchased {selectedAmount} FUSD
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -30,7 +202,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {isConnected ? (
+        {currentAccount ? (
           <>
             {/* Token Balances */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
@@ -62,7 +234,12 @@ export default function Dashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-4xl font-bold">1,250.00</div>
+                  <div className="text-4xl font-bold">
+                    {Number(fusdBalance).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </div>
                   <div className="text-sm mt-2">
                     Stablecoin for insurance premiums
                   </div>
@@ -127,7 +304,20 @@ export default function Dashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+              <button
+                onClick={handleBuyFUSD}
+                className="bg-green-900 hover:bg-green-800 transition-colors rounded-3xl p-6 flex items-center justify-between"
+              >
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Buy FUSD</h3>
+                  <p className="text-sm text-neutral-400">
+                    Purchase FUSD with fiat
+                  </p>
+                </div>
+                <CreditCard className="h-6 w-6 text-green-400" />
+              </button>
+
               <Link
                 href="/buy-insurance"
                 className="bg-neutral-700 hover:bg-neutral-600 transition-colors rounded-3xl p-6 flex items-center justify-between"
@@ -237,13 +427,38 @@ export default function Dashboard() {
             </p>
             <Button
               onClick={connectWallet}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 rounded-full text-lg"
+              disabled={isLoading}
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 rounded-full text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Connect Wallet
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <span className="animate-spin">
+                    <svg className="h-5 w-5" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </span>
+                  Connecting...
+                </div>
+              ) : (
+                "Connect Wallet"
+              )}
             </Button>
           </div>
         )}
       </div>
+      <BuyFUSDModal />
     </div>
   );
 }
