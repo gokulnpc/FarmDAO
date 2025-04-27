@@ -93,62 +93,8 @@ export default function MyPolicies() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-800 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-neutral-800 text-white p-4">
       <div className="max-w-7xl mx-auto rounded-3xl bg-[#1a1a1a] overflow-hidden p-6 md:p-10">
-        {/* Navigation */}
-        <nav className="flex flex-wrap items-center justify-between gap-4 mb-16">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center">
-              <div className="text-white font-semibold text-xl flex items-center">
-                <div className="w-8 h-8 mr-2">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M3 9H7V21H3V9Z" fill="white" />
-                    <path d="M10 3H21V7H10V3Z" fill="white" />
-                    <path d="M10 10H21V21H17V14H10V10Z" fill="white" />
-                  </svg>
-                </div>
-                FarmDAO
-              </div>
-            </Link>
-            <div className="bg-neutral-700 text-neutral-400 px-4 py-2 rounded-full text-xs">
-              DEFI
-              <br />
-              INSURANCE
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href="/dashboard"
-              className="bg-neutral-700 text-white px-6 py-3 rounded-full"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/buy-insurance"
-              className="border border-white text-white px-6 py-3 rounded-full"
-            >
-              Buy Insurance
-            </Link>
-            <Link
-              href="/my-policies"
-              className="bg-green-600 text-white px-6 py-3 rounded-full"
-            >
-              My Policies
-            </Link>
-            <Link
-              href="/dispute-center"
-              className="border border-white text-white px-6 py-3 rounded-full"
-            >
-              Dispute Center
-            </Link>
-          </div>
-        </nav>
-
         {/* Page Header */}
         <div className="mb-10">
           <h1 className="text-4xl font-serif mb-4">My Policies</h1>

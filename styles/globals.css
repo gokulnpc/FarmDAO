@@ -2,8 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
 body {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Ensure Next.js root elements take full height */
+#__next,
+main {
+  height: 100%;
+  width: 100%;
 }
 
 @layer utilities {
@@ -86,9 +99,9 @@ body {
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border box-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen min-w-full;
   }
 }

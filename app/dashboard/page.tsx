@@ -19,66 +19,8 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-800 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-neutral-800 text-white p-4">
       <div className="max-w-7xl mx-auto rounded-3xl bg-[#1a1a1a] overflow-hidden p-6 md:p-10">
-        {/* Navigation */}
-        <nav className="flex flex-wrap items-center justify-between gap-4 mb-16">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center">
-              <div className="text-white font-semibold text-xl flex items-center">
-                <div className="w-8 h-8 mr-2">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M3 9H7V21H3V9Z" fill="white" />
-                    <path d="M10 3H21V7H10V3Z" fill="white" />
-                    <path d="M10 10H21V21H17V14H10V10Z" fill="white" />
-                  </svg>
-                </div>
-                FarmDAO
-              </div>
-            </Link>
-            <div className="bg-neutral-700 text-neutral-400 px-4 py-2 rounded-full text-xs">
-              DEFI
-              <br />
-              INSURANCE
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button className="bg-neutral-300 text-black p-3 rounded-full">
-              <Facebook size={18} />
-            </button>
-            <button className="bg-neutral-300 text-black p-3 rounded-full">
-              <Instagram size={18} />
-            </button>
-            <button className="bg-neutral-300 text-black px-6 py-3 rounded-full flex items-center gap-2">
-              Menu
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-black rounded-full"></div>
-                <div className="w-2 h-2 bg-black rounded-full"></div>
-                <div className="w-2 h-2 bg-black rounded-full"></div>
-              </div>
-            </button>
-            {isConnected ? (
-              <div className="bg-green-600 text-white px-6 py-3 rounded-full flex items-center">
-                <Wallet className="mr-2 h-4 w-4" />
-                {walletAddress.substring(0, 6)}...
-                {walletAddress.substring(walletAddress.length - 4)}
-              </div>
-            ) : (
-              <button
-                onClick={connectWallet}
-                className="bg-green-600 text-white px-6 py-3 rounded-full"
-              >
-                Connect Wallet
-              </button>
-            )}
-          </div>
-        </nav>
-
         {/* Dashboard Header */}
         <div className="mb-10">
           <h1 className="text-4xl font-serif mb-4">Dashboard</h1>

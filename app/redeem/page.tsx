@@ -39,7 +39,7 @@ export default function Redeem() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-800 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-neutral-800 text-white p-4">
       <div className="max-w-7xl mx-auto rounded-3xl bg-[#1a1a1a] overflow-hidden p-6 md:p-10">
         {/* Navigation */}
         <nav className="flex flex-wrap items-center justify-between gap-4 mb-16">
