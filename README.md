@@ -1,6 +1,10 @@
-🌟 Polkadot Hackathon Survival Guide 🌟
+🌾 FarmDAO — Decentralized Crop Insurance & Governance on Polkadot 🌾
 
+FarmDAO is a decentralized insurance and governance platform revolutionizing agricultural insurance through smart contracts, Chainlink oracles, and DAO-driven dispute resolution on the Polkadot network.  
+Farmers purchase parametric crop insurance policies using stablecoins (FUSD), represented as NFTs, ensuring transparent, automated coverage against real-world weather events.  
+In the case of disputes, token holders vote via a decentralized governance system, ensuring fairness, transparency, and economic incentives for honest participation.
 
+![Description of image](https://drive.google.com/uc?id=1Yyv9mu3I-EcebO1VjZGbonQvjVZELGK_)
 ## 🌟 Overview
 
 ## 💻 DEMO
@@ -14,7 +18,13 @@
 
 ## 🎯 Key Features
 
-## :snowflake: Project Structure
+- 🌾 **Parametric Crop Insurance**: Instant, automated payouts triggered by real-world weather data.
+- ⛓ **On-Chain NFT Insurance Policies**: Farmers own policy NFTs transparently on-chain.
+- 🌩 **Decentralized Oracles**: Secure, tamper-proof weather data via Chainlink on Polkadot parachains.
+- 🗳 **Community-Driven Governance**: Token holders resolve disputes through an anonymous, incentivized voting system.
+- 🔒 **Incentive-Aligned Voting**: Honest voters earn FDAO rewards, ensuring unbiased governance participation.
+
+## ❄️ Project Structure
 ```
 FarmDao-Frontend/
 ├── app                       # Main directory of front-end app
@@ -26,14 +36,13 @@ FarmDao-Frontend/
 │   └── WeatherService.ts     # Weather-API 
 ├── ...
 FarmDao-Contracts/
-├── utils/                    # Utility functions
+├── contracts/                # Contracts main folder
 │   └── ...
-│   └── trulens_feedbacks.py  # Trulensfeedback metrics
-│   └── trulens_utils.py      # Trulens utilities
+│   └── DisputManager.sol     
+│   └── InsuranceContract.sol      
 │
-├── prompts/                  # System prompts
-├── app.py                    # Main Streamlit application
-└── requirements.txt          # Dependencies
+├── test/                     # test file for the contract
+├── hardhat.config.ts         # Configuratiton for deployed network
 ```
 
 ## 💻 Technology Stack
