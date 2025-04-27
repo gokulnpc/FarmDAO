@@ -167,8 +167,9 @@ FarmDao-Contracts/
 
 ## 👥 Contributors
 
-- **Gokuleshwaran Narayanan**
-- **Dylan**
+- [Gokuleshwaran Narayanan](https://linkedin.com/in/gokulnpc)
+- [Dylan Nguyen](https://www.linkedin.com/in/dylan-nguyen-1b5783212/) 
+
 
 ---
 
