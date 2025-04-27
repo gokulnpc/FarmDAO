@@ -1,5 +1,5 @@
 export const GovernanceDAO = {
-  address: "0xb8F156806f8aEcc25A69c2EFC5a414E326F1E616",
+  address: "0x37035da168BaEE11970019B3fe7377aB3984A18b",
   abi: [
     {
       inputs: [
@@ -157,29 +157,6 @@ export const GovernanceDAO = {
       type: "function",
     },
     {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_disputeId",
-          type: "uint256",
-        },
-        {
-          internalType: "bool",
-          name: "_approve",
-          type: "bool",
-        },
-        {
-          internalType: "uint256",
-          name: "_stakeAmount",
-          type: "uint256",
-        },
-      ],
-      name: "vote",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
       anonymous: false,
       inputs: [
         {
@@ -209,6 +186,55 @@ export const GovernanceDAO = {
       ],
       name: "VoteCast",
       type: "event",
+    },
+    {
+      stateMutability: "payable",
+      type: "fallback",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_disputeId",
+          type: "uint256",
+        },
+        {
+          internalType: "bool",
+          name: "_approve",
+          type: "bool",
+        },
+        {
+          internalType: "uint256",
+          name: "_stakeAmount",
+          type: "uint256",
+        },
+      ],
+      name: "vote",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address payable",
+          name: "_recipient",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "_amount",
+          type: "uint256",
+        },
+      ],
+      name: "withdrawNativeTokens",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      stateMutability: "payable",
+      type: "receive",
     },
     {
       inputs: [],

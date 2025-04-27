@@ -59,45 +59,91 @@ export default function DisputeCenter() {
     try {
       setIsLoading(true);
       const signer = await provider.getSigner();
+      const signerAddress = await signer.getAddress();
+      console.log("Signer Address:", signerAddress);
+
+      // First, call DisputeManager to initiate the dispute
       const disputeManager = new ethers.Contract(
         DisputeManager.address,
         DisputeManager.abi,
         signer
       );
 
-      // Create dispute on blockchain using initiateDispute
-      const tx = await disputeManager.initiateDispute(newPolicyId);
-      const receipt = await tx.wait();
+      // Also get reference to GovernanceDAO to listen for its events
+      const governanceDAO = new ethers.Contract(
+        GovernanceDAO.address,
+        GovernanceDAO.abi,
+        provider
+      );
 
-      // Get dispute ID from event
-      const event = receipt.logs.find(
+      console.log("Creating dispute for policy:", newPolicyId);
+
+      // Call initiateDispute on DisputeManager
+      const tx = await disputeManager.initiateDispute(newPolicyId, {
+        gasLimit: 1000000,
+      });
+
+      console.log("Dispute initiation transaction sent:", tx.hash);
+      const receipt = await tx.wait();
+      console.log("Dispute initiation receipt:", receipt);
+
+      // Find DisputeInitiated event from DisputeManager
+      const initiatedEvent = receipt.logs.find(
         (log: any) => log.eventName === "DisputeInitiated"
       );
 
-      if (!event) {
-        throw new Error("Dispute creation event not found");
+      if (!initiatedEvent) {
+        throw new Error("DisputeInitiated event not found");
       }
 
-      const disputeId = event.args[0];
+      // Wait for a few blocks to ensure the GovernanceDAO has processed the dispute
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-      // Store in MongoDB
-      await fetch("/api/disputes", {
+      // Get the latest dispute ID from GovernanceDAO
+      const disputeCount = await governanceDAO.disputeCount();
+      const latestDisputeId = (disputeCount - BigInt(1)).toString();
+
+      // Verify the dispute exists and matches our policy ID
+      const disputeData = await governanceDAO.disputes(latestDisputeId);
+      console.log("Created dispute data:", disputeData);
+
+      if (disputeData.policyId.toString() !== newPolicyId) {
+        throw new Error("Created dispute does not match policy ID");
+      }
+
+      // Store in MongoDB with the correct dispute ID
+      const response = await fetch("/api/disputes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          disputeId: disputeId.toString(),
+          disputeId: latestDisputeId,
           policyId: newPolicyId,
-          creator: currentAccount,
+          creator: signerAddress,
           startTime: Math.floor(Date.now() / 1000),
+          status: "Active",
+          votesFor: 0,
+          votesAgainst: 0,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to store dispute in database");
+      }
 
       toast.success("Dispute created successfully!");
       setNewPolicyId(""); // Clear input
       fetchDisputes();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating dispute:", error);
-      toast.error("Failed to create dispute");
+      let errorMessage = "Failed to create dispute";
+
+      if (error.reason) {
+        errorMessage = error.reason;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(`Dispute creation failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -114,6 +160,7 @@ export default function DisputeCenter() {
       const signer = await provider.getSigner();
       const signerAddress = await signer.getAddress();
       console.log("Signer Address:", signerAddress);
+
       const governanceDAO = new ethers.Contract(
         GovernanceDAO.address,
         GovernanceDAO.abi,
@@ -131,24 +178,17 @@ export default function DisputeCenter() {
       // Check if dispute is resolved
       if (disputeData.resolved) {
         toast.error("This dispute has already been resolved");
-        console.log("Dispute already resolved");
         return;
       }
 
       // Check if voting period has ended
       const votingPeriod = await governanceDAO.VOTING_PERIOD();
-      console.log("Voting Period:", votingPeriod);
       const currentTime = Math.floor(Date.now() / 1000);
       if (currentTime > disputeData.startTime + votingPeriod) {
-        console.log("Voting period has ended");
-        console.log("Current Time:", currentTime);
-        console.log("Dispute Start Time:", disputeData.startTime);
-        console.log("Voting Period:", disputeData.startTime + votingPeriod);
-
         toast.error("Voting period has ended for this dispute");
         return;
       }
-      console.log("Current Time:", currentTime);
+
       // Check if user has already voted
       const hasVoted = await governanceDAO
         .disputes(disputeId)
@@ -159,13 +199,14 @@ export default function DisputeCenter() {
       }
 
       // FDAO has 18 decimals, minimum stake is 100 FDAO
-      const stakeAmount = ethers.parseUnits("100", 18);
+      const stakeAmount = ethers.parseUnits("100", 0);
 
       // Check FDAO balance
       const fdaoBalance = await fdaoToken.balanceOf(signerAddress);
-      console.log("FDAO Balance:", ethers.formatUnits(fdaoBalance, 18), "FDAO");
+      console.log("FDAO Balance:", ethers.formatUnits(fdaoBalance, 0), "FDAO");
 
       if (fdaoBalance < stakeAmount) {
+        console.log("Insufficient FDAO balance");
         toast.error(
           "Insufficient FDAO balance. You need at least 100 FDAO to vote."
         );
@@ -198,14 +239,12 @@ export default function DisputeCenter() {
       console.log("Voting parameters:", {
         disputeId,
         approve,
-        stakeAmount: ethers.formatUnits(stakeAmount, 18),
+        stakeAmount: stakeAmount,
         voter: signerAddress,
       });
 
       // Cast vote using GovernanceDAO contract
-      const voteTx = await governanceDAO.vote(disputeId, approve, stakeAmount, {
-        gasLimit: 1000000,
-      });
+      const voteTx = await governanceDAO.vote(disputeId, approve, stakeAmount);
 
       console.log("Vote transaction sent:", voteTx.hash);
       const receipt = await voteTx.wait();
@@ -222,6 +261,35 @@ export default function DisputeCenter() {
       );
 
       if (voteCastEvent) {
+        // Get updated vote counts from contract
+        const updatedDisputeData = await governanceDAO.disputes(disputeId);
+        const approvalVotes = updatedDisputeData.approvalVotes;
+        const rejectionVotes = updatedDisputeData.rejectionVotes;
+
+        // Update MongoDB with new vote counts and voter
+        const response = await fetch(`/api/disputes/${disputeId}/`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            votesFor: Number(approvalVotes),
+            votesAgainst: Number(rejectionVotes),
+            voter: {
+              address: signerAddress,
+              vote: approve,
+              amount: Number(stakeAmount),
+              timestamp: Math.floor(Date.now() / 1000),
+            },
+          }),
+        });
+
+        if (!response.ok) {
+          console.error(
+            "Failed to update vote in database:",
+            await response.text()
+          );
+          // Don't throw error here as the blockchain vote was successful
+        }
+
         toast.success(`Vote cast successfully! Staked 100 FDAO`);
       } else {
         console.log("No VoteCast event found in logs:", receipt.logs);
@@ -231,7 +299,6 @@ export default function DisputeCenter() {
       fetchDisputes();
     } catch (error: any) {
       console.error("Error voting:", error);
-      // Extract revert reason if available
       let errorMessage = "Failed to cast vote";
 
       if (error.reason) {
@@ -289,21 +356,8 @@ export default function DisputeCenter() {
         return;
       }
 
-      // Check if voting period has ended
-      const votingPeriod = await governanceDAO.VOTING_PERIOD();
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (currentTime <= disputeData.startTime + votingPeriod) {
-        toast.error("Cannot resolve dispute before voting period ends");
-        console.log("Current Time:", currentTime);
-        console.log("Dispute Start Time:", disputeData.startTime);
-        console.log("Voting Period End:", disputeData.startTime + votingPeriod);
-        return;
-      }
-
       // Call resolveDispute function
-      const tx = await governanceDAO.resolveDispute(disputeId, {
-        gasLimit: 1000000,
-      });
+      const tx = await governanceDAO.resolveDispute(disputeId);
 
       console.log("Resolution transaction sent:", tx.hash);
       const receipt = await tx.wait();
@@ -320,6 +374,26 @@ export default function DisputeCenter() {
 
       if (resolvedEvent) {
         const approved = resolvedEvent.args[1]; // Second argument is the approved status
+
+        // Update MongoDB with resolved status
+        const response = await fetch(`/api/disputes/${disputeId}/`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "Resolved",
+            outcome: approved ? "Approved" : "Rejected",
+            resolvedAt: Math.floor(Date.now() / 1000),
+            resolvedBy: signerAddress,
+          }),
+        });
+
+        if (!response.ok) {
+          console.error(
+            "Failed to update dispute status in database:",
+            await response.text()
+          );
+        }
+
         toast.success(
           `Dispute resolved successfully! Outcome: ${
             approved ? "Approved" : "Rejected"
